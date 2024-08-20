@@ -5,23 +5,23 @@ export const loginOrSignup = async (req: Request, res: Response) => {
   const { userId, firstName, lastName, profilePic } = req.body;
 
   try {
-    // Check if the user already exists
-    let user = await User.findOne({ userId });
+    // Check if the userDataalready exists
+    let userData= await User.findOne({ userId });
 
-    if (user) {
+    if (userData) {
       // User exists, log them in
-      return res.status(200).json({ message: 'Login successful', user });
+      return res.status(200).json({ message: 'Login successful', userData});
     } else {
       // User does not exist, create a new user
-      user = new User({
+      userData= new User({
         userId,
         firstName,
         lastName,
         profilePic,
       });
 
-      await user.save();
-      return res.status(201).json({ message: 'Signup successful', user });
+      await userData.save();
+      return res.status(201).json({ message: 'Signup successful', userData});
     }
   } catch (error) {
     return res.status(500).json({ message: 'Server error', error });
