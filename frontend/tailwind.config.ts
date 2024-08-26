@@ -9,7 +9,9 @@ const config: Config = {
   theme: {
     colors: {
       'background': '#121212',
-      'surface': '#1E1E1E'
+      'surface': '#202020',
+      'on-surface': '#9B9B9B',
+      'on-surface-darker': '#1d1d1d'
     },
   },
   plugins: [],
