@@ -11,7 +11,7 @@ function SidebarUserTab(props: Props) {
 
         </div>
         <div>
-            <span className="font-regular text-sm">Project.A</span>
+            <span className="font-regular text-sm">{props.userName}</span>
         </div>
     </div>
   )
