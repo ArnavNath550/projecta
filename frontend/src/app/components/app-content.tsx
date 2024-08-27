@@ -1,6 +1,5 @@
 import React from 'react'
 import AppContentNav from './app-content-nav'
-import AnimatedDialog from '../packages/ui/animated-dialog'
 
 function AppContent() {
   return (
@@ -8,7 +7,7 @@ function AppContent() {
       <AppContentNav />
       <div className="pt-2 pb-3 w-full h-full">
         <div className="p-2 bg-background border-[1px] border-surface rounded-md w-full h-full">
-          <AnimatedDialog trigger={<button>Open</button>} />
+          <span>Animated Dialog</span>
         </div>
       </div>
     </div>
