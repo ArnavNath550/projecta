@@ -35,7 +35,7 @@ function Sidebar() {
   
 
   return (
-    <div className="w-[245px] h-full p-3.5 flex flex-col gap-2">
+    <div className="w-[245px] h-full p-3.5 flex flex-col gap-2 animate-fade-in">
         <SidebarUserTab 
           userName='Project.A'
         />
