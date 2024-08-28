@@ -52,28 +52,7 @@ function Sidebar() {
             )
           })}
         </div>
-        <AnimatedDialog
-          trigger={
-            <Button intent="primary" size="base">
-              <div className="flex flex-row gap-2 items-center justify-center">
-                Create Project
-              </div>
-            </Button>
-          }
-          content={<CreateProjectDialog />}
-        />
-
-        <div className="flex flex-col">
-          {sidebarProjects.map((y) => {
-            return (
-              <SidebarProjectTab 
-                projectColor={y.projectColor}
-                projectIcon={y.projectIcon}
-                projectName={y.projectName}
-              />
-            )
-          })}
-        </div>
+        
     </div>
   )
 }
