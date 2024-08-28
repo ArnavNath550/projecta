@@ -1,8 +1,11 @@
 import React from 'react'
 import SidebarUserTab from './sidebar-user-tab'
 import SidebarTab from './sidebar-tab'
-import { IconHome, IconHome2, IconInbox, IconNotification, IconSearch, IconSettings } from '@tabler/icons-react'
+import { IconHome, IconHome2, IconInbox, IconNotification, IconSearch, IconSettings, IconStack, IconStack2 } from '@tabler/icons-react'
 import SidebarProjectTab from './sidebar-project-tab';
+import Button from '../packages/ui/button';
+import AnimatedDialog from '../packages/ui/animatedDialog';
+import CreateProjectDialog from './dialogs/create-project-dialog';
 
 function Sidebar() {
   const sidebarTabs = [
@@ -49,6 +52,16 @@ function Sidebar() {
             )
           })}
         </div>
+        <AnimatedDialog
+          trigger={
+            <Button intent="primary" size="base">
+              <div className="flex flex-row gap-2 items-center justify-center">
+                Create Project
+              </div>
+            </Button>
+          }
+          content={<CreateProjectDialog />}
+        />
 
         <div className="flex flex-col">
           {sidebarProjects.map((y) => {

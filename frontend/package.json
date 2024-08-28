@@ -13,6 +13,7 @@
     "@tabler/icons-react": "^3.13.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "class-variance-authority": "^0.7.0",
     "framer-motion": "^11.3.30",
     "next": "14.2.5",
     "react": "^18",

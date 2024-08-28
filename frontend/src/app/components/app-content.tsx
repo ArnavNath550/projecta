@@ -7,7 +7,7 @@ function AppContent() {
       <AppContentNav />
       <div className="pt-2 pb-3 w-full h-full">
         <div className="p-2 bg-background border-[1px] border-surface rounded-md w-full h-full">
-          <span>Animated Dialog</span>
+
         </div>
       </div>
     </div>

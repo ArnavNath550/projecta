@@ -9,7 +9,12 @@ const config: Config = {
   theme: {
     colors: {
       'background': '#121212',
-      'surface': '#202020',
+      'brand-color': '#8753e1',
+      'brand-lighter-color': '#9974da',
+      'brand-darker-color': '#663faa',
+      'surface-border': '#383B41',
+      'surface': '#1B1C1F',
+      'surface-lighter': '#292C33',
       'on-surface': '#9B9B9B',
       'on-surface-darker': '#1d1d1d'
     },
@@ -24,6 +29,10 @@ const config: Config = {
         from: { opacity: "0", transform: "translateY(-10px)" },
         to: { opacity: "1", transform: "none" },
       },
+      'fade-up': {
+          '0%': { opacity: 0, transform: 'translateY(10px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
       "image-rotate": {
         "0%": { transform: "rotateX(25deg)" },
         "25%": { transform: "rotateX(25deg) scale(0.9)" },
@@ -86,6 +95,7 @@ const config: Config = {
         "glow-line-vertical var(--animation-duration) ease-in forwards",
       zap: "zap 2250ms calc(var(--index) * 20ms) linear infinite",
       bounce: "bounce 240ms ease 0s 1 running",
+      'fade-up': 'fade-up 0.3s ease-out',
     },
   },
   plugins: [],
