@@ -1,7 +1,7 @@
 import React from 'react'
 import SidebarUserTab from './sidebar-user-tab'
 import SidebarTab from './sidebar-tab'
-import { IconHome, IconHome2, IconInbox, IconNotification, IconSearch, IconSettings, IconStack, IconStack2 } from '@tabler/icons-react'
+import { IconCircle, IconHome, IconHome2, IconInbox, IconNotification, IconSearch, IconSettings, IconStack, IconStack2, IconTable } from '@tabler/icons-react'
 import SidebarProjectTab from './sidebar-project-tab';
 import Button from '../packages/ui/button';
 import AnimatedDialog from '../packages/ui/animatedDialog';
@@ -38,6 +38,21 @@ function Sidebar() {
       'projectName': 'Ramp',
     },
   ];
+
+  const sidebarProjectItems = [
+    {
+      'tabName': 'Tasks',
+      'tabIcon': <IconTable size={20} className="text-on-surface" strokeWidth={1} />
+    },
+    {
+      'tabName': 'Backlog',
+      'tabIcon': <IconCircle size={20} className="text-on-surface" strokeWidth={1} />
+    },
+    {
+      'tabName': 'Layers',
+      'tabIcon': <IconStack size={20} className="text-on-surface" strokeWidth={1} />
+    },
+  ]
   
 
   return (
@@ -67,6 +82,16 @@ function Sidebar() {
             <ProjectSelectorDialog />
             }
            />
+        </div>
+        <div className="flex flex-col gap-1 pl-2">
+            {sidebarProjectItems.map((y) => {
+              return (
+                <SidebarTab 
+                  tabIcon={y.tabIcon}
+                  tabName={y.tabName}
+                />
+              )
+            })}
         </div>
         
     </div>
