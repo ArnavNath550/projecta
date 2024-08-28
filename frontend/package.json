@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-popover": "^1.1.1",
     "@tabler/icons-react": "^3.13.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",

@@ -6,6 +6,9 @@ import SidebarProjectTab from './sidebar-project-tab';
 import Button from '../packages/ui/button';
 import AnimatedDialog from '../packages/ui/animatedDialog';
 import CreateProjectDialog from './dialogs/create-project-dialog';
+import SidebarProjectSwitcher from './sidebar-project-switcher';
+import AnimatedPopover from '../packages/ui/animatedPopover';
+import ProjectSelectorDialog from './dialogs/project-selector-dialog';
 
 function Sidebar() {
   const sidebarTabs = [
@@ -51,6 +54,19 @@ function Sidebar() {
               />
             )
           })}
+        </div>
+        <div>
+          <AnimatedDialog
+           trigger={
+            <SidebarProjectSwitcher 
+              projectIcon="💻"
+              projectName="Rocket OS"
+            />
+           }
+           content={
+            <ProjectSelectorDialog />
+            }
+           />
         </div>
         
     </div>

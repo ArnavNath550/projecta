@@ -12,7 +12,7 @@ function SidebarTab(props: Props) {
        <div className="flex flex-row gap-2.5 items-center p-1 rounded-md cursor-pointer hover:bg-surface transition-all">
             {props.tabIcon}
             <div>
-                <span className="font-regular text-sm text-on-surface">{props.tabName}</span>
+                <span className="font-regular text-sm text-[#fff]">{props.tabName}</span>
             </div>
         </div>
   )
