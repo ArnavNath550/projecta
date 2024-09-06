@@ -8,7 +8,7 @@ const buttonStyles = cva(
   {
     variants: {
       intent: {
-        primary: 'bg-brand-color text-white border-[1px] border-brand-lighter-color hover:bg-brand-darker-color',
+        primary: 'hidden lg:flex rounded-md bg-brand-color border-[1px] border-brand-darker-color px-3.5 py-2 text-sm font-medium text-shark-950 transition-[box-shadow,background,color] duration-200 ease-out shadow shadow-md',
         secondary: 'border-[1px] border-surface-border bg-surface-lighter hover:bg-surface',
       },
       size: {

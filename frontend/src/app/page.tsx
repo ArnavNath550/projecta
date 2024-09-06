@@ -2,14 +2,15 @@
 import React from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { postDataMethod } from './services/api';
+import { generateObjectId } from './helpers';
 
 export default function Home() {
   const { data: session } = useSession();
 
   React.useEffect(() => {
-    if (session) {
+    if (session) { 
       const userData = {
-        userId: 55555,
+        userId: session.user?.id,
         email: session.user?.email || '',
         firstName: session.user?.name?.split(' ')[0] || 'DefaultFirstName',
         lastName: session.user?.name?.split(' ')[1] || 'DefaultLastName',
@@ -18,12 +19,12 @@ export default function Home() {
       postDataMethod('http://localhost:8080/api/auth/login', userData)
         .then((data) => {
           window.location.href = "/client";
-          localStorage.setItem('userId', data.userId)
         })
         .catch((error) => {
           console.error('Error saving user:', error);
         });
     }
+    console.log(session?.user);
   }, [session]);
 
   return (

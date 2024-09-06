@@ -8,7 +8,7 @@ const config: Config = {
   ],
   theme: {
     colors: {
-      'background': '#121212',
+      'background': '#202020',
       'brand-color': '#8753e1',
       'brand-lighter-color': '#9974da',
       'brand-darker-color': '#663faa',
@@ -16,7 +16,8 @@ const config: Config = {
       'surface': '#1B1C1F',
       'surface-lighter': '#292C33',
       'on-surface': '#9B9B9B',
-      'on-surface-darker': '#1d1d1d'
+      'on-surface-darker': '#1d1d1d',
+      'error': '#f74747'
     },
     boxShadow: {
       primary: "rgb(80 63 205 / 50%) 0px 1px 40px",

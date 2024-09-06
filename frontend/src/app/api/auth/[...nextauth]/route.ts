@@ -1,3 +1,4 @@
+//ts-nocheck
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { AdapterUser } from "next-auth/adapters";
@@ -12,22 +13,21 @@ const handler = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET ?? "secret",
   callbacks: {
-    async signIn({
-      user,
-      account,
-      profile,
-      email,
-      credentials,
-    }: {
-      user: AdapterUser;
-      account: Account | null;
-      profile?: Profile;
-      email?: { verificationRequest?: boolean };
-      credentials?: Record<string, string>;
-    }) {
-      console.log(`user`, user);
-      return true; // return true to allow sign-in, or false to deny
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        session.user.id = token.sub;
+      }
+      return session;
     },
+    jwt: async ({ user, token }) => {
+      if (user) {
+        token.uid = user.id;
+      }
+      return token;
+    },
+  },
+  session: {
+    strategy: 'jwt',
   },
 } as NextAuthOptions);
 

@@ -10,7 +10,12 @@ import SidebarProjectSwitcher from './sidebar-project-switcher';
 import AnimatedPopover from '../packages/ui/animatedPopover';
 import ProjectSelectorDialog from './dialogs/project-selector-dialog';
 
-function Sidebar() {
+type Props = {
+  sidebarProjectItems: [],
+  setAppContent: () => void
+}
+
+function Sidebar(props: Props) {
   const sidebarTabs = [
     {
       'tabName': 'Search',
@@ -37,26 +42,10 @@ function Sidebar() {
       'projectIcon': '💻',
       'projectName': 'Ramp',
     },
-  ];
-
-  const sidebarProjectItems = [
-    {
-      'tabName': 'Tasks',
-      'tabIcon': <IconTable size={20} className="text-on-surface" strokeWidth={1} />
-    },
-    {
-      'tabName': 'Backlog',
-      'tabIcon': <IconCircle size={20} className="text-on-surface" strokeWidth={1} />
-    },
-    {
-      'tabName': 'Layers',
-      'tabIcon': <IconStack size={20} className="text-on-surface" strokeWidth={1} />
-    },
-  ]
-  
+  ];  
 
   return (
-    <div className="w-[245px] h-full p-3.5 flex flex-col gap-2 animate-fade-in">
+    <div className="w-[245px] h-full p-3.5 flex flex-col gap-2 animate-fade-in border-r-[1px] border-surface-lighter">
         <SidebarUserTab 
           userName='Project.A'
         />
@@ -84,11 +73,13 @@ function Sidebar() {
            />
         </div>
         <div className="flex flex-col gap-1 pl-2">
-            {sidebarProjectItems.map((y) => {
+            {props.sidebarProjectItems.map((y) => {
               return (
                 <SidebarTab 
                   tabIcon={y.tabIcon}
                   tabName={y.tabName}
+                  setAppContent={props.setAppContent}
+                  appContent={y.tabPage}
                 />
               )
             })}
