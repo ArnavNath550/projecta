@@ -5,7 +5,7 @@ import Sidebar from '@/app/components/sidebar'
 import { IconCircle, IconStack, IconTable } from '@tabler/icons-react'
 import React from 'react'
 
-function Client() {
+function TasksPage() {
   const [appContent, setAppContent] = React.useState(<span>app content</span>);
   const [sidebarProjectItems, setSideabrProjectItems] = React.useState([
     {
@@ -25,9 +25,9 @@ function Client() {
   return (
     <div className="w-full h-full flex flex-row">
       <Sidebar sidebarProjectItems={sidebarProjectItems} setAppContent={setAppContent} />
-      <AppContent content={appContent}/>
+      <AppContent content={<CustomKanban />}/>
     </div>
   )
 }
 
-export default Client
+export default TasksPage
