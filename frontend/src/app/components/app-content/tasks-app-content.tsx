@@ -10,6 +10,8 @@ import React, {
 import { motion } from "framer-motion";
 import { IconFlame, IconPlus, IconX } from "@tabler/icons-react";
 import Button from "../../packages/ui/button";
+import AnimatedDialog from "../../packages/ui/animatedDialog";
+import CreateTaskDialog from "../dialogs/create-task-dialog";
 
 export const CustomKanban = () => {
   return (
@@ -181,9 +183,12 @@ const Column = ({
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-regular text-sm`}>{title}</h3>
         <div className="flex flex-row items-center justify-center gap-2">
-          <Button intent="unstyled" size="s">
-            <IconPlus size={20} color="#fff" />
-          </Button>
+          <AnimatedDialog 
+            trigger={<Button intent="unstyled" size="s">
+              <IconPlus size={20} color="#fff" />
+            </Button>}
+            content={<CreateTaskDialog />}
+          />
           <span className="rounded text-sm text-neutral-400">
             {filteredCards.length}
           </span>

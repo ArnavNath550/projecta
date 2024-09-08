@@ -8,15 +8,15 @@ const config: Config = {
   ],
   theme: {
     colors: {
-      'background': '#202020',
+      'background': '#030303',
       'brand-color': '#8753e1',
       'brand-lighter-color': '#9974da',
       'brand-darker-color': '#663faa',
-      'surface-border': '#383B41',
-      'surface': '#1B1C1F',
+      'surface-border': '#383b42',
+      'surface': '#2a2c33',
       'surface-lighter': '#292C33',
       'on-surface': '#9B9B9B',
-      'on-surface-darker': '#1d1d1d',
+      'on-surface-darker': '#16171b',
       'error': '#f74747'
     },
     boxShadow: {

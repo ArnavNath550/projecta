@@ -4,16 +4,16 @@ import { cn } from '../utils/cn'; // Optional utility for combining classes, if 
 
 // Define the button styles using cva
 const buttonStyles = cva(
-  'inline-flex items-center justify-center rounded-md font-normal transition-colors disabled:opacity-50 disabled:cursor-not-allowed outline-none',
+  'inline-flex items-center justify-center rounded-md font-normal transition-colors disabled:opacity-50 disabled:cursor-not-allowed outline-none shadow shadow-md',
   {
     variants: {
       intent: {
-        primary: 'hidden lg:flex rounded-md bg-brand-color border-[1px] border-brand-darker-color px-3.5 py-2 text-sm font-medium text-shark-950 transition-[box-shadow,background,color] duration-200 ease-out shadow shadow-md',
-        secondary: 'border-[1px] border-surface-border bg-surface-lighter hover:bg-surface',
+        primary: 'hidden lg:flex rounded-md bg-brand-color border-[1px] border-brand-darker-color text-sm font-medium text-shark-950 transition-[box-shadow,background,color] duration-200 ease-out shadow shadow-md',
+        secondary: 'border-[1px] border-surface-border bg-surface-lighter items-center justify-center',
         unstyled: 'bg-transparent rounded-full hover:bg-surface'
       },
       size: {
-        s: 'px-2.5 py-1.5 text-xs',
+        s: 'px-2 py-1.5 text-xs',
         base: 'px-3.5 py-2 text-xs',
         l: 'px-5 py-2.5 text-base rounded-full text-sm',
       },
