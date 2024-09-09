@@ -44,3 +44,57 @@ html,body {
 .DialogContent[data-state='closed'] {
   animation: fadeOut 300ms ease-in;
 }
+
+.blur-fade-move-animation {
+  animation: blurFadeMove 1s ease-out forwards;
+  filter: blur(10px);
+  opacity: 0;
+}
+
+@keyframes blurFadeMove {
+  0% {
+      opacity: 0;
+      filter: blur(10px);
+  }
+  50% {
+      opacity: 0.5;
+      filter: blur(5px);
+  }
+  100% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+  }
+}
+
+/* Shine */
+.shine-full-page-loader:after {
+	content:'';
+  top:0;
+	transform:translateX(100%);
+	width:100%;
+	height:100%;
+	position: absolute;
+	z-index:1;
+	animation: slide 2s infinite;
+  /* animation-delay: 2ms; */
+	 
+  /* 
+  CSS Gradient - complete browser support from http://www.colorzilla.com/gradient-editor/ 
+  */
+  background: -moz-linear-gradient(left, rgba(209,196,244,0) 0%, rgba(152, 107, 243, 0.8) 50%, rgba(107,140,243,0) 99%, rgba(107,140,243,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(209,196,244,0)), color-stop(50%,rgba(155, 107, 243, 0.8)), color-stop(99%,rgba(107,140,243,0)), color-stop(100%,rgba(107,140,243,0))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left, rgba(209,196,244,0) 0%,rgba(150, 107, 243, 0.8) 50%,rgba(107,140,243,0) 99%,rgba(107,140,243,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left, rgba(209,196,244,0) 0%,rgba(107, 108, 165, 0.8) 50%,rgba(107,140,243,0) 99%,rgba(107,140,243,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left, rgba(209,196,244,0) 0%,rgba(180, 107, 243, 0.8) 50%,rgba(107,140,243,0) 99%,rgba(107,140,243,0) 100%); /* IE10+ */
+	background: linear-gradient(to right, rgba(209,196,244,0) 0%,rgba(107, 116, 243, 0.8) 50%,rgba(107,140,243,0) 99%,rgba(107,140,243,0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00d1c4f4', endColorstr='#006b8cf3',GradientType=1 ); /* IE6-9 */
+}
+
+
+/* animation */
+
+@keyframes slide {
+	0% {transform:translateX(-100%);}
+	100% {transform:translateX(100%);}
+}

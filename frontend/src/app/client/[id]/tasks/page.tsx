@@ -1,6 +1,7 @@
 'use client'
 import AppContent from '@/app/components/app-content'
 import { CustomKanban } from '@/app/components/app-content/tasks-app-content'
+import FullPageLoader from '@/app/components/loaders/full-page-loader'
 import Sidebar from '@/app/components/sidebar'
 import { API_ENDPOINT } from '@/app/services/api'
 import { serviceFetchProjectDetails } from '@/app/services/project-service'
@@ -42,10 +43,16 @@ function TasksPage() {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-row">
+    <>
+      {projectDataLoading == true ? (
+        <FullPageLoader />
+      ) : (
+        <div className="w-full h-full flex flex-row">
       <Sidebar projectData={projectData} projectDataLoading={projectDataLoading} sidebarProjectItems={sidebarProjectItems} setAppContent={setAppContent} />
       <AppContent projectData={projectData} projectDataLoading={projectDataLoading} content={<CustomKanban />}/>
-    </div>
+      </div>
+      )}
+    </>
   )
 }
 
