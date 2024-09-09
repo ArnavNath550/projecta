@@ -9,6 +9,7 @@ import CreateProjectDialog from './dialogs/create-project-dialog';
 import SidebarProjectSwitcher from './sidebar-project-switcher';
 import AnimatedPopover from '../packages/ui/animatedPopover';
 import ProjectSelectorDialog from './dialogs/project-selector-dialog';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   sidebarProjectItems: [],
@@ -18,6 +19,8 @@ type Props = {
 }
 
 function Sidebar(props: Props) {
+  const { data: session } = useSession();
+
   const sidebarTabs = [
     {
       'tabName': 'Search',
@@ -49,7 +52,8 @@ function Sidebar(props: Props) {
   return (
     <div className="w-[245px] h-full p-3.5 flex flex-col gap-2 animate-fade-in border-r-[1px] border-surface-lighter">
         <SidebarUserTab 
-          userName='Project.A'
+          image={session?.user.image}
+          userName={session?.user.name}
         />
         <div className="flex flex-col gap-1">
           {sidebarTabs.map((y) => {
