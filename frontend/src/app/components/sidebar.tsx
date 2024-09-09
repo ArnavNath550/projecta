@@ -12,7 +12,9 @@ import ProjectSelectorDialog from './dialogs/project-selector-dialog';
 
 type Props = {
   sidebarProjectItems: [],
-  setAppContent: () => void
+  setAppContent: () => void,
+  projectData: [],
+  projectDataLoading: Boolean
 }
 
 function Sidebar(props: Props) {
@@ -59,20 +61,20 @@ function Sidebar(props: Props) {
             )
           })}
         </div>
-        <div>
+        {props.projectDataLoading == false  ?(
+          <div className="flex flex-col gap-2">
           <AnimatedDialog
            trigger={
             <SidebarProjectSwitcher 
               projectIcon="💻"
-              projectName="Rocket OS"
+              projectName={props.projectData.projectName}
             />
            }
            content={
             <ProjectSelectorDialog />
             }
            />
-        </div>
-        <div className="flex flex-col gap-1 pl-2">
+           <div className="flex flex-col gap-1 pl-2">
             {props.sidebarProjectItems.map((y) => {
               return (
                 <SidebarTab 
@@ -84,6 +86,10 @@ function Sidebar(props: Props) {
               )
             })}
         </div>
+        </div>
+        ) : (
+          <></>
+        )}
         
     </div>
   )
