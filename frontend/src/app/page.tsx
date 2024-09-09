@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { postDataMethod } from './services/api';
+import { API_ENDPOINT, postDataMethod } from './services/api';
 import { generateObjectId } from './helpers';
 
 export default function Home() {
@@ -16,7 +16,9 @@ export default function Home() {
         lastName: session.user?.name?.split(' ')[1] || 'DefaultLastName',
       };
 
-      postDataMethod('http://localhost:8080/api/auth/login', userData)
+      console.log(`userData`, userData);
+
+      postDataMethod(API_ENDPOINT + '/auth/login', userData)
         .then((data) => {
           window.location.href = "/client";
         })
