@@ -44,7 +44,7 @@ function TasksPage() {
   return (
     <div className="w-full h-full flex flex-row">
       <Sidebar projectData={projectData} projectDataLoading={projectDataLoading} sidebarProjectItems={sidebarProjectItems} setAppContent={setAppContent} />
-      <AppContent content={<CustomKanban />}/>
+      <AppContent projectData={projectData} projectDataLoading={projectDataLoading} content={<CustomKanban />}/>
     </div>
   )
 }
