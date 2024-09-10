@@ -4,11 +4,13 @@ import Project from '../models/project.model';
 // Create a new project
 export const createProject = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { projectId, projectName, projectIcon } = req.body;
+        const { projectId, projectName, projectDescription, projectIcon, projectCreator } = req.body;
         const newProject = new Project({
             projectId,
             projectName,
-            projectIcon
+            projectDescription,
+            projectIcon,
+            projectCreator
         });
 
         await newProject.save();

@@ -1,9 +1,11 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, trusted } from 'mongoose';
 
 interface IProject extends Document {
     projectId: string;
     projectName: string;
+    projectDescription: string;
     projectIcon?: string;
+    projectCreator: string;
     projectCreatedAt: Date;
 }
 
@@ -17,9 +19,17 @@ const projectSchema = new Schema<IProject>({
         type: String,
         required: true
     },
+    projectDescription: {
+        type: String,
+        required: true
+    },
     projectIcon: {
         type: String,
         required: false
+    },
+    projectCreator: {
+        type: String,
+        required: true
     },
     projectCreatedAt: {
         type: Date,

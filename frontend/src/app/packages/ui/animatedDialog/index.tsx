@@ -21,7 +21,7 @@ function AnimatedDialog({ trigger, content }: Props) {
   });
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+<Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger asChild>
         {trigger}
       </Dialog.Trigger>

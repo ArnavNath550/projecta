@@ -22,7 +22,11 @@ db.once('open', () => {
 const app = express();
 
 // Use CORS middleware
-app.use(cors());
+app.use(cors({
+  origin: ["https://localhost:3000"],
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true
+}));
 
 app.use(express.json());
 
