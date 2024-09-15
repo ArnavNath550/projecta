@@ -1,7 +1,11 @@
 import Button from '@/app/packages/ui/button'
 import React from 'react'
 
-function ProjectSelectorItem() {
+type Props = {
+    data: []
+}
+
+function ProjectSelectorItem(props: Props) {
   return (
     <div className="flex flex-row justify-between items-center w-[500px] p-3 hover:bg-surface-lighter rounded-md cursor-pointer transition-all">
         <div className="flex flex-row gap-4 items-center w-[500px]">
@@ -12,7 +16,7 @@ function ProjectSelectorItem() {
         </div>
         <div className="flex flex-col gap-2">
             <div className="font-medium text-lg">
-                Rocket Os
+                {props.data.projectName}
             </div>
             <div className="flex flex-row items-center ml-[10px]">
                 <div className="w-[30px] h-[30px] bg-surface-lighter border-[1px] border-surface-border rounded-full -ml-[10px] z-30"></div>
@@ -22,7 +26,7 @@ function ProjectSelectorItem() {
         </div>
         </div>
         <div>
-            <Button intent="primary" size="l">
+            <Button intent="primary" size="l" onClick={() => window.location.href = "/client/"+props.data.projectId}>
                 Enter
             </Button>
         </div>

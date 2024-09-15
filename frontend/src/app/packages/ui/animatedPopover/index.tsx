@@ -9,7 +9,7 @@ type Props = {
 
 const AnimatedPopover = (props: Props) => (
   <Popover.Root>
-    <Popover.Trigger asChild>
+    <Popover.Trigger>
       {props.trigger}
     </Popover.Trigger>
     <Popover.Portal>

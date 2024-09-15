@@ -91,10 +91,71 @@ html,body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00d1c4f4', endColorstr='#006b8cf3',GradientType=1 ); /* IE6-9 */
 }
 
+.shine-basic:after {
+	content:'';
+  top:0;
+	transform:translateX(100%);
+	width:100%;
+	height:100%;
+	position: absolute;
+	z-index:1;
+	animation: slide 2s forwards;
+  /* animation-delay: 2ms; */
+	 
+  /* 
+  CSS Gradient - complete browser support from http://www.colorzilla.com/gradient-editor/ 
+  */
+	background: linear-gradient(to right, rgb(33 29 41 / 0%) 0%, rgba(36, 17, 78, 0.8) 50%, rgba(107, 140, 243, 0) 99%, rgba(107, 140, 243, 0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00d1c4f4', endColorstr='#006b8cf3',GradientType=1 ); /* IE6-9 */
+}
 
 /* animation */
 
 @keyframes slide {
 	0% {transform:translateX(-100%);}
 	100% {transform:translateX(100%);}
+}
+
+/* styles.css */
+.DropdownMenuContent {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+.DropdownMenuContent[data-side='top'] {
+  animation-name: slideUp;
+}
+.DropdownMenuContent[data-side='bottom'] {
+  animation-name: slideDown;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.home-hero-heading {
+  text-wrap: nowrap;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="592" height="76" fill="none"><g clip-path="url(%23a)"><path fill="%233E79EA" d="M0 0h592v76H0z"/><g filter="url(%23b)" style="mix-blend-mode:plus-lighter"><path stroke="url(%23c)" stroke-linecap="round" stroke-linejoin="round" stroke-width="150" d="M-303-163 409 97"/></g><g filter="url(%23d)" opacity=".7" style="mix-blend-mode:plus-lighter"><path stroke="url(%23e)" stroke-linecap="round" stroke-linejoin="round" stroke-width="110" d="M-248-275 448 6"/></g></g><defs><linearGradient id="c" x1="456" x2="-284.464" y1="136" y2="34.349" gradientUnits="userSpaceOnUse"><stop offset=".058" stop-color="%235200FF"/><stop offset=".413" stop-color="%233400CA" stop-opacity="0"/></linearGradient><linearGradient id="e" x1="565.211" x2="-306.156" y1="-137.324" y2="175.617" gradientUnits="userSpaceOnUse"><stop offset=".036" stop-color="%23fff"/><stop offset=".383" stop-color="%23fff" stop-opacity="0"/></linearGradient><filter id="b" width="946.047" height="494.039" x="-420.023" y="-280.02" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_1857_4631" stdDeviation="21"/></filter><filter id="d" width="890.031" height="475.031" x="-345.016" y="-372.016" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_1857_4631" stdDeviation="21"/></filter><clipPath id="a"><path fill="%23fff" d="M0 0h592v76H0z"/></clipPath></defs></svg>');
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }

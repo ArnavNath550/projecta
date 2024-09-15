@@ -6,11 +6,14 @@ import Sidebar from '@/app/components/sidebar'
 import { API_ENDPOINT } from '@/app/services/api'
 import { serviceFetchProjectDetails } from '@/app/services/project-service'
 import { IconCircle, IconStack, IconTable } from '@tabler/icons-react'
+import { useParams, usePathname, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 function TasksPage() {
   const [appContent, setAppContent] = React.useState(<span>app content</span>);
-  const id = "66d9bde83d23c74900000000";
+  const params = useParams<{ id: number; }>()
+  const id = params.id;
   const [projectDataLoading, setProjectDataLoading] = React.useState(true);
   const [projectData, setProjectData] = React.useState([]);
   const [sidebarProjectItems, setSideabrProjectItems] = React.useState([

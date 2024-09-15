@@ -11,10 +11,12 @@ import { postDataMethod } from '@/app/services/api';
 import { ObjectId } from 'bson'
 import { generateObjectId } from '@/app/helpers';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 
 const CreateProjectDialog = () => {
   const {data: session} = useSession();
+  const router = useRouter();
   // Formik form handler
   const formik = useFormik({
     initialValues: {
@@ -36,7 +38,9 @@ const CreateProjectDialog = () => {
           projectIcon: 'https://example.com/icon.png', // Static for now, can be dynamic
         });
         console.log('Project created successfully:', response);
-        resetForm();
+        // router.push("/client/[id]/", {id: response.projectId});
+        window.location.href = "/client/"+response.projectId+"/";
+        // resetForm();
       } catch (error) {
         console.error('Error creating project:', session?.user.id);
       } finally {

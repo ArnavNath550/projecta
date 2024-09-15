@@ -11,6 +11,8 @@ import { postDataMethod } from '@/app/services/api';
 import { ObjectId } from 'bson'
 import { generateObjectId } from '@/app/helpers';
 import { useSession } from 'next-auth/react';
+import AnimatedPopover from '@/app/packages/ui/animatedPopover';
+import AnimatedDropdown from '@/app/packages/ui/animatedDropdown';
 
 
 const CreateTaskDialog = () => {
@@ -81,7 +83,7 @@ const CreateTaskDialog = () => {
           ) : null}
         </div>
         <div className="flex flex-row gap-2">
-          <Button intent="secondary" size="s">
+              <Button intent="secondary" size="s">
             <div className="flex flex-row gap-1 items-center justify-center">
             <IconWifi2 color="#fff" size={15} />
             Priority
