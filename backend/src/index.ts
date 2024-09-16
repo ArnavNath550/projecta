@@ -5,6 +5,7 @@ import cors from 'cors';  // Import cors
 import { loginOrSignup } from './controllers/auth.controller';
 
 import projectRoutes from './routes/project.route';
+import taskRoutes from './routes/task.route';
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://arnavnath:theprojectaoffical@projecta-db.ghksrow.mongodb.net/?retryWrites=true&w=majority&appName=projecta-db',  {
@@ -32,6 +33,7 @@ app.use(express.json());
 
 app.post('/api/auth/login', loginOrSignup);
 app.use('/api', projectRoutes)
+app.use('/api', taskRoutes);
 
 app.listen(8080, () => {
   console.log('Server is running on port 8080');
