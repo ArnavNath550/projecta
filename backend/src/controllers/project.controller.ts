@@ -47,6 +47,23 @@ export const getProjectById = async (req: Request, res: Response): Promise<void>
     }
 };
 
+export const getProjectByUserId = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const projects = await Project.find({ projectCreator: id });
+
+        if (projects.length === 0) {
+            res.status(404).json({ message: 'No projects found for this user' });
+            return;
+        }
+
+        res.status(200).json(projects); // 'projects' is an array, not a single document
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching projects', error });
+    }
+};
+
+
 // Update a project
 export const updateProject = async (req: Request, res: Response): Promise<void> => {
     try {

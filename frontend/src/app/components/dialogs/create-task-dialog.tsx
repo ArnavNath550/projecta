@@ -57,14 +57,15 @@ const CreateTaskDialog = () => {
         </div>
         <div className="flex flex-col gap-2 pt-3 pb-3">
           <Input
-            id="taskName"
-            name="Task Name"
-            placeholder="Task Name"
-            variant="unstyled"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.taskName}
-          />
+  id="taskName"
+  name="taskName" // Correct name attribute
+  placeholder="Task Name"
+  variant="unstyled"
+  onChange={formik.handleChange}
+  onBlur={formik.handleBlur}
+  value={formik.values.taskName}
+/>
+
           {formik.touched.taskName && formik.errors.taskName ? (
             <div className="text-error text-xs">{formik.errors.taskName}</div>
           ) : null}
