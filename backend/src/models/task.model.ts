@@ -1,30 +1,32 @@
 import { Schema, model, Document } from 'mongoose';
+import { ObjectId } from 'bson';  // Import ObjectId from bson
 
-// Task Interface for TypeScript
-interface ITask extends Document {
-  projectId: string;                 // Reference to the project
-  taskCreator: string;               // The user who created the task
-  taskAssignees?: string[];          // Optional array of user IDs assigned to the task
-  taskName: string;                  // Task name
-  taskDescription: string;           // Task description
-  taskPriority: 'low' | 'medium' | 'high';  // Task priority (can be 'low', 'medium', or 'high')
+export interface ITask extends Document {
+  taskId: string;  // Add taskId
+  projectId: string;
+  taskCreator: string;
+  taskAssignees?: string[];
+  taskName: string;
+  taskDescription: string;
+  taskPriority: 'low' | 'medium' | 'high';
 }
 
-// Task Schema Definition
-const taskSchema = new Schema<ITask>({
-  projectId: { type: String, required: true },       // Required field for project reference
-  taskCreator: { type: String, required: true },     // Required field for creator
-  taskName: { type: String, required: true },        // Required task name
-  taskDescription: { type: String },                 // Optional description
-  taskAssignees: { type: [String], default: [] },    // Optional field for task assignees
-  taskPriority: {                                    // Priority field with enum validation
+const TaskSchema = new Schema<ITask>({
+  taskId: {
     type: String,
-    enum: ['low', 'medium', 'high'],
-    default: 'medium',
-  }
-}, { timestamps: true });  // Add createdAt and updatedAt fields
+    required: true,
+    default: () => new ObjectId().toString(),  // Auto-generate a string version of ObjectId
+    unique: true,
+  },
+  projectId: { type: String, required: true },
+  taskCreator: { type: String, required: true },
+  taskAssignees: { type: [String], default: [] },
+  taskName: { type: String, required: true },
+  taskDescription: { type: String },
+  taskPriority: { type: String, required: true, enum: ['low', 'medium', 'high'] },
+}, {
+  timestamps: true,  // Automatically handle createdAt and updatedAt fields
+});
 
-// Export the Task model
-const Task = model<ITask>('Task', taskSchema);
-
+const Task = model<ITask>('Task', TaskSchema);
 export default Task;
