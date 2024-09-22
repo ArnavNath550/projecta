@@ -13,8 +13,8 @@ const getErrorMessage = (error: unknown): string => {
 // Create Task
 export const createTask = async (req: Request, res: Response) => {
   try {
-    const { projectId, taskCreator, taskAssignees, taskName, taskDescription, taskPriority } = req.body;
-    
+    const { projectId, taskCreator, taskAssignees, taskName, taskDescription, taskPriority, taskType } = req.body;
+
     // Generate taskId using ObjectId from bson
     const taskId = new ObjectId().toString();
 
@@ -27,6 +27,7 @@ export const createTask = async (req: Request, res: Response) => {
       taskName,
       taskDescription,
       taskPriority,
+      taskType,  // Include taskType
     });
 
     const savedTask = await newTask.save();
@@ -85,7 +86,7 @@ export const getTasksByProjectId = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'No tasks found for this project' });
     }
 
-    return res.status(200).json({ message: 'Tasks retrieved successfully', tasks });
+    return res.status(200).json({ tasks });
   } catch (error) {
     return res.status(500).json({ message: 'Error retrieving tasks', error: getErrorMessage(error) });
   }

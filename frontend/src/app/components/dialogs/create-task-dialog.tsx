@@ -11,9 +11,12 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { generateObjectId } from '@/app/helpers';
 
-const CreateTaskDialog = () => {
-  const { data: session } = useSession();
+type Props = {
+  reloadTasks: () => any
+}
 
+const CreateTaskDialog = (props: Props) => {
+  const { data: session } = useSession();
   const params = useParams();
   
   // Formik form handler
@@ -26,12 +29,12 @@ const CreateTaskDialog = () => {
     validationSchema: Yup.object({
       taskName: Yup.string().required('Task Name is required'),
       taskDescription: Yup.string(),
-      taskPriority: Yup.string().oneOf(['low', 'medium', 'high'], 'Invalid priority'), // Validation for taskPriority
+      taskPriority: Yup.string().oneOf(['low', 'medium', 'high'], 'Invalid priority'),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         const taskId = generateObjectId(); // Example taskId generation, replace with your method
-        
+
         const response = await axios.post('http://localhost:8080/api/tasks', {
           taskId,
           projectId: params.id, // Replace with actual project ID
@@ -40,9 +43,10 @@ const CreateTaskDialog = () => {
           taskName: values.taskName,
           taskDescription: values.taskDescription,
           taskPriority: values.taskPriority,
+          taskType: 'TODO',  // Hardcoded taskType value
         });
 
-        console.log('Task created successfully:', response.data);
+        props.reloadTasks();
         resetForm();
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -90,7 +94,7 @@ const CreateTaskDialog = () => {
           {formik.touched.taskDescription && formik.errors.taskDescription ? (
             <div className="text-error text-xs">{formik.errors.taskDescription}</div>
           ) : null}
-          
+
           <div className="flex flex-row gap-2">
             <Button intent="secondary" size="s">
               <div className="flex flex-row gap-1 items-center justify-center">

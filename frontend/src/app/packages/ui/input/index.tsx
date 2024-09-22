@@ -17,7 +17,7 @@ export const Input: React.FC<InputProps> = ({ label, id, variant = 'default', ..
     const baseStyles =
     'outline-none resize-none rounded-md border-[1px] drop-shadow-sm transition-all';
   const defaultStyles = 'p-2 pl-3 pr-3  border-surface-lighter bg-background text-sm hover:drop-shadow-md';
-  const unstyledStyles = 'border-none bg-on-surface-darker p-0 shadow-none font-medium text-2xl hover:shadow-none p-0';
+  const unstyledStyles = 'border-none bg-background p-0 shadow-none font-medium text-2xl hover:shadow-none p-0';
 
   return (
     <div className="flex flex-col space-y-1">
@@ -42,7 +42,7 @@ export const TextArea: React.FC<TextareaProps> = ({ label, id, variant = 'defaul
     const baseStyles =
     'outline-none resize-none rounded-md border-[1px] drop-shadow-sm transition-all';
   const defaultStyles = 'p-2 pl-3 pr-3  border-surface-lighter bg-background text-sm hover:drop-shadow-md';
-  const unstyledStyles = 'border-none bg-on-surface-darker p-0 shadow-none font-regular text-sm hover:shadow-none p-0';
+  const unstyledStyles = 'border-none bg-background p-0 shadow-none font-regular text-sm hover:shadow-none p-0';
 
   return (
     <div className="flex flex-col space-y-1">

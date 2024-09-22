@@ -33,7 +33,7 @@ function AnimatedDialog({ trigger, content }: Props) {
               style={style}
               className="fixed inset-0 flex items-center justify-center"
             >
-              <Dialog.Content className="max-h-[85vh] rounded-[8px] bg-on-surface-darker border-surface-border border-[1px] drop-shadow-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
+              <Dialog.Content className="max-h-[85vh] rounded-[8px] bg-[#0C0516] border-surface-border border-[1px] drop-shadow-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
                 {content}
               </Dialog.Content>
             </animated.div>

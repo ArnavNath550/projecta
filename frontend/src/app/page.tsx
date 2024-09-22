@@ -3,6 +3,8 @@ import React from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { API_ENDPOINT, postDataMethod } from './services/api';
 import { generateObjectId } from './helpers';
+import Navbar from './components/landing/navbar';
+import Hero from './components/landing/hero';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -31,8 +33,10 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Sign in</h1>
-      <button onClick={() => signIn('google')}>Sign in with Google</button>
+      <Navbar />
+      <Hero />
+      {/* <h1>Sign in</h1>
+      <button onClick={() => signIn('google')}>Sign in with Google</button> */}
     </div>
   );
 }

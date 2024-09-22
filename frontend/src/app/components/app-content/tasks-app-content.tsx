@@ -12,6 +12,9 @@ import { IconFlame, IconPlus, IconX } from "@tabler/icons-react";
 import Button from "../../packages/ui/button";
 import AnimatedDialog from "../../packages/ui/animatedDialog";
 import CreateTaskDialog from "../dialogs/create-task-dialog";
+import axios from "axios";
+import { useParams } from "next/navigation";
+import { API_ENDPOINT } from "@/app/services/api";
 
 export const CustomKanban = () => {
   return (
@@ -22,38 +25,57 @@ export const CustomKanban = () => {
 };
 
 const TasksAppContent = () => {
-  const [cards, setCards] = useState(DEFAULT_CARDS);
+  const [cards, setCards] = useState<CardType[]>([]);
+
+  const params = useParams<{ id: number; }>()
+
+  // Fetch tasks from the backend when the component mounts
+  React.useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/tasks/project/'+params.id);
+        const tasks = response.data; // Assuming response is an array of tasks
+        const formattedTasks = tasks.tasks.map((task: any) => ({
+          title: task.taskName,  // Assuming your task object contains a taskName field
+          id: task.taskId,       // Assuming your task object contains a taskId field
+          priority: task.taskPriority,
+          createdBy: task.taskCreator,
+          column: task.taskType.toLowerCase(), // Assuming taskType could be 'TODO', 'DOING', etc.
+        }));
+        setCards(formattedTasks);
+        // setCards(tasks);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, [params.id]); // Empty dependency array ensures this runs only once when the component mounts
+
+
+    // Dynamically group tasks by their column type (taskType or column)
+    const groupedTasks = cards.reduce((acc: Record<string, CardType[]>, task) => {
+      const column = task.column; // Dynamically grouping by the `column` field
+      if (!acc[column]) acc[column] = [];
+      acc[column].push(task);
+      return acc;
+    }, {});
+  
+    // Get unique column names from the grouped tasks
+    const columnNames = Object.keys(groupedTasks);
 
   return (
     <div className="flex h-full w-full gap-5 overflow-scroll">
-      <Column
-        title="Backlog"
-        column="backlog"
-        headingColor="text-neutral-500"
-        cards={cards}
-        setCards={setCards}
-      />
-      <Column
-        title="TODO"
-        column="todo"
-        headingColor="text-yellow-200"
-        cards={cards}
-        setCards={setCards}
-      />
-      <Column
-        title="In progress"
-        column="doing"
-        headingColor="text-blue-200"
-        cards={cards}
-        setCards={setCards}
-      />
-      <Column
-        title="Complete"
-        column="done"
-        headingColor="text-emerald-200"
-        cards={cards}
-        setCards={setCards}
-      />
+     {columnNames.map((column) => (
+        <Column
+          key={column}
+          title={column.charAt(0).toUpperCase() + column.slice(1)} // Capitalize column name
+          column={column}
+          headingColor="text-neutral-500" // Adjust headingColor if needed
+          cards={groupedTasks[column]}
+          setCards={setCards}
+        />
+      ))}
     </div>
   );
 };
@@ -62,7 +84,7 @@ type ColumnProps = {
   title: string;
   headingColor: string;
   cards: CardType[];
-  column: ColumnType;
+  column: string;
   setCards: Dispatch<SetStateAction<CardType[]>>;
 };
 
@@ -176,7 +198,7 @@ const Column = ({
     setActive(false);
   };
 
-  const filteredCards = cards.filter((c) => c.column === column);
+  // const filteredCards = cards.filter((c) => c.column === column);
 
   return (
     <div className="w-[270px] shrink-0">
@@ -190,7 +212,7 @@ const Column = ({
             content={<CreateTaskDialog />}
           />
           <span className="rounded text-sm text-neutral-400">
-            {filteredCards.length}
+            {cards.length}
           </span>
         </div>
       </div>
@@ -202,8 +224,15 @@ const Column = ({
           active ? "bg-neutral-800/50" : "bg-neutral-800/0"
         }`}
       >
-        {filteredCards.map((c) => {
-          return <Card key={c.id} {...c} handleDragStart={handleDragStart} />;
+        {cards.map((c) => {
+          return <Card 
+            title={c.title}
+            id={c.id}
+            column={c.column}
+            priority={c.priority}
+            createdBy={c.createdBy}
+            handleDragStart={handleDragStart}
+            />
         })}
         <DropIndicator beforeId={null} column={column} />
         {/* <AddCard column={column} setCards={setCards} /> */}
@@ -216,7 +245,23 @@ type CardProps = CardType & {
   handleDragStart: Function;
 };
 
-const Card = ({ title, id, column, handleDragStart }: CardProps) => {
+const Card = ({ title, id, column, priority, createdBy, handleDragStart }: CardProps) => {
+  const [userData, setUserData] = React.useState([]);
+  
+  const fetchUserData = async() => {
+    try {
+      const response = await axios.get(API_ENDPOINT + '/users/'+createdBy);
+      setUserData(response.data);
+      // console.log(`response`, response.data);
+    } catch (error: any) {
+      console.error('Error fetching users:', error.response?.data || error.message);
+    }
+  }
+
+  React.useEffect(() => {
+    fetchUserData();
+  }, []);
+
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
@@ -225,9 +270,24 @@ const Card = ({ title, id, column, handleDragStart }: CardProps) => {
         layoutId={id}
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { title, id, column })}
-        className="rounded border-surface-border border-[1px] bg-surface p-3"
+        className="rounded border-surface-border border-[1px] bg-surface p-3 flex flex-col gap-2 cursor-pointer hover:bg-surface-lighter"
       >
         <p className="text-sm text-neutral-100">{title}</p>
+        <div className="flex flex-row gap-2">
+          <Button intent="secondary" size="s">
+            {priority}
+          </Button>
+          {userData ? (
+            <Button intent="secondary" size="s">
+              <div className="p-2 bg-surface rounded-sm" style={{backgroundImage: `url(${userData.profilePic})`, backgroundSize: 'contain'}}>
+
+              </div>
+              {userData.firstName} {userData.lastName}
+            </Button> 
+          ) : (
+            <></>
+          )}
+        </div>
       </motion.div>
     </>
   );
@@ -358,35 +418,7 @@ type ColumnType = "backlog" | "todo" | "doing" | "done";
 type CardType = {
   title: string;
   id: string;
+  createdBy: string;
+  priority: string;
   column: ColumnType;
 };
-
-const DEFAULT_CARDS: CardType[] = [
-  // BACKLOG
-  { title: "Look into render bug in dashboard", id: "1", column: "backlog" },
-  { title: "SOX compliance checklist", id: "2", column: "backlog" },
-  { title: "[SPIKE] Migrate to Azure", id: "3", column: "backlog" },
-  { title: "Document Notifications service", id: "4", column: "backlog" },
-  // TODO
-  {
-    title: "Research DB options for new microservice",
-    id: "5",
-    column: "todo",
-  },
-  { title: "Postmortem for outage", id: "6", column: "todo" },
-  { title: "Sync with product on Q3 roadmap", id: "7", column: "todo" },
-
-  // DOING
-  {
-    title: "Refactor context providers to use Zustand",
-    id: "8",
-    column: "doing",
-  },
-  { title: "Add logging to daily CRON", id: "9", column: "doing" },
-  // DONE
-  {
-    title: "Set up DD dashboards for Lambda listener",
-    id: "10",
-    column: "done",
-  },
-];

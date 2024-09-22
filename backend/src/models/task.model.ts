@@ -9,6 +9,7 @@ export interface ITask extends Document {
   taskName: string;
   taskDescription: string;
   taskPriority: 'low' | 'medium' | 'high';
+  taskType: string;  // New field
 }
 
 const TaskSchema = new Schema<ITask>({
@@ -24,6 +25,7 @@ const TaskSchema = new Schema<ITask>({
   taskName: { type: String, required: true },
   taskDescription: { type: String },
   taskPriority: { type: String, required: true, enum: ['low', 'medium', 'high'] },
+  taskType: { type: String, required: true },  // New field
 }, {
   timestamps: true,  // Automatically handle createdAt and updatedAt fields
 });

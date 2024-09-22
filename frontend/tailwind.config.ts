@@ -8,13 +8,14 @@ const config: Config = {
   ],
   theme: {
     colors: {
-      'background': '#030303',
+      'background': '#0C0516',
       'brand-color': '#8753e1',
       'brand-lighter-color': '#9974da',
       'brand-darker-color': '#663faa',
-      'surface-border': '#383b42',
-      'surface': '#2a2c33',
-      'surface-lighter': '#292C33',
+      'surface-border': '#373546',
+      'surface': '#1b1525',
+      'surface-lighter': '#241c32',
+      'surface-darker': '#1d1728',
       'on-surface': '#9B9B9B',
       'on-surface-darker': '#16171b',
       'error': '#f74747'
