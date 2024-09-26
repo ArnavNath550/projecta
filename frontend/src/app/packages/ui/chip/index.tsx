@@ -9,7 +9,7 @@ interface ChipProps {
 }
 
 const sizeClasses = {
-  s: 'text-xs px-2 py-1',
+  s: 'text-[11px] p-1.5',
   base: 'text-sm px-3 py-1.5',
   l: 'text-md px-4 py-2',
 };
@@ -23,13 +23,13 @@ export const Chip: React.FC<ChipProps> = ({
 }) => {
   return (
     <div
-      className={`inline-flex items-center gap-1 hover:drop-shadow-md rounded-md border-[1px] border-surface-border bg-surface-lighter text-gray-800 ${sizeClasses[size]} ${className} cursor-pointer hover:bg-gray-300 transition-colors`}
+      className={`inline-flex items-center gap-1 hover:drop-shadow-md rounded-md border-[1px] border-surface-border bg-surface-lighter hover:bg-[#31333a] text-gray-800 ${sizeClasses[size]} ${className} cursor-pointer hover:bg-gray-300 transition-colors h-[28px]`}
       role="button"
       aria-label={label}
       onClick={onClick}
     >
-      {icon}
       <span>{label}</span>
+      {icon}
     </div>
   );
 };

@@ -8,13 +8,16 @@ import React, {
 } from "react";
 
 import { motion } from "framer-motion";
-import { IconFlame, IconPlus, IconX } from "@tabler/icons-react";
+import { IconFlame, IconLineDashed, IconPlus, IconX } from "@tabler/icons-react";
 import Button from "../../packages/ui/button";
 import AnimatedDialog from "../../packages/ui/animatedDialog";
 import CreateTaskDialog from "../dialogs/create-task-dialog";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { API_ENDPOINT } from "@/app/services/api";
+import AnimatedDropdown from "@/app/packages/ui/animatedDropdown";
+import TaskDetailsDialog from "../dialogs/task-details-dialog";
+import { Chip } from "@/app/packages/ui/chip";
 
 export const CustomKanban = () => {
   return (
@@ -29,26 +32,26 @@ const TasksAppContent = () => {
 
   const params = useParams<{ id: number; }>()
 
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/tasks/project/'+params.id);
+      const tasks = response.data; // Assuming response is an array of tasks
+      const formattedTasks = tasks.tasks.map((task: any) => ({
+        title: task.taskName,  // Assuming your task object contains a taskName field
+        id: task.taskId,       // Assuming your task object contains a taskId field
+        priority: task.taskPriority,
+        createdBy: task.taskCreator,
+        column: task.taskType.toLowerCase(), // Assuming taskType could be 'TODO', 'DOING', etc.
+      }));
+      setCards(formattedTasks);
+      // setCards(tasks);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
   // Fetch tasks from the backend when the component mounts
   React.useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/api/tasks/project/'+params.id);
-        const tasks = response.data; // Assuming response is an array of tasks
-        const formattedTasks = tasks.tasks.map((task: any) => ({
-          title: task.taskName,  // Assuming your task object contains a taskName field
-          id: task.taskId,       // Assuming your task object contains a taskId field
-          priority: task.taskPriority,
-          createdBy: task.taskCreator,
-          column: task.taskType.toLowerCase(), // Assuming taskType could be 'TODO', 'DOING', etc.
-        }));
-        setCards(formattedTasks);
-        // setCards(tasks);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
-
     fetchTasks();
   }, [params.id]); // Empty dependency array ensures this runs only once when the component mounts
 
@@ -74,6 +77,7 @@ const TasksAppContent = () => {
           headingColor="text-neutral-500" // Adjust headingColor if needed
           cards={groupedTasks[column]}
           setCards={setCards}
+          fetchTasks={fetchTasks}
         />
       ))}
     </div>
@@ -86,6 +90,7 @@ type ColumnProps = {
   cards: CardType[];
   column: string;
   setCards: Dispatch<SetStateAction<CardType[]>>;
+  fetchTasks: any;
 };
 
 const Column = ({
@@ -94,6 +99,7 @@ const Column = ({
   cards,
   column,
   setCards,
+  fetchTasks,
 }: ColumnProps) => {
   const [active, setActive] = useState(false);
 
@@ -200,6 +206,8 @@ const Column = ({
 
   // const filteredCards = cards.filter((c) => c.column === column);
 
+  const [taskModalOpen, setTaskModalOpen] = React.useState(false);
+
   return (
     <div className="w-[270px] shrink-0">
       <div className="mb-3 flex items-center justify-between">
@@ -209,7 +217,10 @@ const Column = ({
             trigger={<Button intent="unstyled" size="s">
               <IconPlus size={20} color="#fff" />
             </Button>}
-            content={<CreateTaskDialog />}
+            content={<CreateTaskDialog reloadTasks={fetchTasks} setIsOpen={(openState: boolean) => setTaskModalOpen(openState)}
+            />}
+            isOpen={taskModalOpen}
+            setIsOpen={() => setTaskModalOpen}
           />
           <span className="rounded text-sm text-neutral-400">
             {cards.length}
@@ -247,6 +258,7 @@ type CardProps = CardType & {
 
 const Card = ({ title, id, column, priority, createdBy, handleDragStart }: CardProps) => {
   const [userData, setUserData] = React.useState([]);
+
   
   const fetchUserData = async() => {
     try {
@@ -270,24 +282,25 @@ const Card = ({ title, id, column, priority, createdBy, handleDragStart }: CardP
         layoutId={id}
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { title, id, column })}
-        className="rounded border-surface-border border-[1px] bg-surface p-3 flex flex-col gap-2 cursor-pointer hover:bg-surface-lighter"
       >
+      <AnimatedDialog 
+        trigger={
+        <div className="rounded border-surface-border bg-[#1d1e21] p-3 flex flex-col gap-2 cursor-pointer hover:bg-surface-lighter items-start w-[270px] outline-none">
         <p className="text-sm text-neutral-100">{title}</p>
         <div className="flex flex-row gap-2">
-          <Button intent="secondary" size="s">
-            {priority}
-          </Button>
+          <Chip label={priority} size="s" />
           {userData ? (
-            <Button intent="secondary" size="s">
-              <div className="p-2 bg-surface rounded-sm" style={{backgroundImage: `url(${userData.profilePic})`, backgroundSize: 'contain'}}>
-
-              </div>
-              {userData.firstName} {userData.lastName}
-            </Button> 
+            <Chip label={userData.firstName + " " + userData.lastName} size="s" />
           ) : (
             <></>
           )}
         </div>
+          </div>
+        }
+        content={
+          <TaskDetailsDialog taskName={title} taskDescription="Some task description"/>
+        }
+      />
       </motion.div>
     </>
   );

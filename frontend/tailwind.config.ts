@@ -7,18 +7,31 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    // colors: {
+    //   'background': '#0C0516',
+    //   'brand-color': '#7368F5',
+    //   'brand-lighter-color': '#9974da',
+    //   'brand-darker-color': '#574ebe',
+    //   'surface-border': '#373546',
+    //   'surface': '#1b1525',
+    //   'surface-lighter': '#241c32',
+    //   'surface-darker': '#1d1728',
+    //   'on-surface': '#9B9B9B',
+    //   'on-surface-darker': '#16171b',
+    //   'error': '#f74747'
+    // },
     colors: {
-      'background': '#0C0516',
-      'brand-color': '#8753e1',
+      'background': '#030303',
+      'brand-color': '#7368F5',
       'brand-lighter-color': '#9974da',
-      'brand-darker-color': '#663faa',
-      'surface-border': '#373546',
-      'surface': '#1b1525',
-      'surface-lighter': '#241c32',
-      'surface-darker': '#1d1728',
+      'brand-darker-color': '#574ebe',
+      'surface-border': '#383b42',
+      'surface': '#2a2c33',
+      'surface-lighter': '#292C33',
       'on-surface': '#9B9B9B',
       'on-surface-darker': '#16171b',
-      'error': '#f74747'
+      'error': '#f74747',
+      'transparent': 'transparent',
     },
     boxShadow: {
       primary: "rgb(80 63 205 / 50%) 0px 1px 40px",
@@ -32,7 +45,7 @@ const config: Config = {
         to: { opacity: "1", transform: "none" },
       },
       'fade-up': {
-          '0%': { opacity: 0, transform: 'translateY(10px)' },
+          '0%': { opacity: 0.5, transform: 'translateY(8px)' },
           '100%': { opacity: 1, transform: 'translateY(0)' },
         },
       "image-rotate": {
