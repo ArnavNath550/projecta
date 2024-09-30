@@ -1,31 +1,20 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
-export const useKeyPress = (keys: string[], callback: (event: KeyboardEvent) => void, node: any = null) => {
-  const callbackRef = useRef(callback);
-
-  useLayoutEffect(() => {
-    callbackRef.current = callback;
-  });
-
-  const handleKeyPress = useCallback(
-    (event: KeyboardEvent) => {
-      const ctrlPressed = event.ctrlKey || event.metaKey;
-      const enterPressed = keys.includes('Enter') && event.key === 'Enter';
-
-      // Check for Ctrl + Enter
-      if (ctrlPressed && enterPressed) {
-        callbackRef.current(event);
-      }
-    },
-    [keys]
-  );
-
+export const useKeyPress = (keys: string[], action: () => void) => {
   useEffect(() => {
-    const targetNode = node ?? document;
-    targetNode.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      targetNode.removeEventListener('keydown', handleKeyPress);
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // event.preventDefault();
+      if (keys.includes(event.key)) {
+        action();
+      }
     };
-  }, [handleKeyPress, node]);
+
+    // Attach event listener
+    window.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [keys, action]);
 };

@@ -1,6 +1,6 @@
 'use client'
 import AppContent from '@/app/components/app-content'
-import { CustomKanban } from '@/app/components/app-content/tasks-app-content'
+import { CustomKanban } from '@/app/components/app-content/tasks-app-content-v2'
 import FullPageLoader from '@/app/components/loaders/full-page-loader'
 import Sidebar from '@/app/components/sidebar'
 import { API_ENDPOINT } from '@/app/services/api'

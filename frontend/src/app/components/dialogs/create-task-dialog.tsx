@@ -13,8 +13,10 @@ import { generateObjectId } from '@/app/helpers';
 import AnimatedDropdown from '@/app/packages/ui/animatedDropdown';
 import TooltipButton from '@/app/packages/ui/animatedTooltip';
 import { useKeyPress } from '../../../../helpers';
+import { API_ENDPOINT } from '@/app/services/api';
 
 type Props = {
+  taskStatus: string,
   reloadTasks: () => any,
   setIsOpen: () => void
 }
@@ -59,7 +61,7 @@ const CreateTaskDialog = (props: Props) => {
     try {
       const taskId = generateObjectId();
 
-      await axios.post('http://localhost:8080/api/tasks', {
+      await axios.post(API_ENDPOINT + '/tasks', {
         taskId,
         projectId: params.id, 
         taskCreator: session?.user.id,
@@ -67,7 +69,7 @@ const CreateTaskDialog = (props: Props) => {
         taskName: values.taskName,
         taskDescription: values.taskDescription,
         taskPriority: 'medium',
-        taskType: 'TODO',
+        taskType: props.taskStatus,
       });
 
       props.reloadTasks();
@@ -122,6 +124,13 @@ const CreateTaskDialog = (props: Props) => {
           ) : null}
 
           <div className="flex flex-row gap-2">
+            <AnimatedDropdown
+              trigger={
+                <Chip size="s" label={props.taskStatus} icon={<IconLineDashed size={14}/>}/>
+              }
+              dropdownItems={priorityDropdownItems}
+              itemAction={(value: string) => setPriority(value)}
+              />
             <AnimatedDropdown
               trigger={
                 <Chip size="s" label={priority ? priority : "Priority"} icon={<IconLineDashed size={14}/>}/>

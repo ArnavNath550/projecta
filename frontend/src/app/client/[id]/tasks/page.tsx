@@ -1,6 +1,6 @@
 'use client'
 import AppContent from '@/app/components/app-content'
-import { CustomKanban } from '@/app/components/app-content/tasks-app-content'
+import IssueAppContent from '@/app/components/app-content/issue-app-content'
 import FullPageLoader from '@/app/components/loaders/full-page-loader'
 import Sidebar from '@/app/components/sidebar'
 import { API_ENDPOINT } from '@/app/services/api'
@@ -20,7 +20,7 @@ function TasksPage() {
     {
       'tabName': 'Tasks',
       'tabIcon': <IconTable size={20} className="text-on-surface" strokeWidth={1} />,
-      'tabPage': <CustomKanban />
+      'tabPage': <span>Hello</span>
     },
     {
       'tabName': 'Backlog',
@@ -52,7 +52,7 @@ function TasksPage() {
       ) : (
         <div className="w-full h-full flex flex-row">
       <Sidebar projectData={projectData} projectDataLoading={projectDataLoading} sidebarProjectItems={sidebarProjectItems} setAppContent={setAppContent} />
-      <AppContent projectData={projectData} projectDataLoading={projectDataLoading} content={<CustomKanban />}/>
+      <AppContent projectData={projectData} projectDataLoading={projectDataLoading} content={<IssueAppContent />}/>
       </div>
       )}
     </>
