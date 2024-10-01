@@ -30,7 +30,7 @@ const TooltipButton: React.FC<TooltipButtonProps> = ({
               <div className="flex flex-row items-center">
                 {keyboardShortcut.map((key, i) => (
                   <React.Fragment key={i}>
-                    <div className="bg-on-surface-darker rounded-md p-1">{key}</div>
+                    <div className="bg-[#3f424b] rounded-md p-1">{key}</div>
                     {i < keyboardShortcut.length - 1 && <span className="mx-1 text-on-surface">+</span>}
                   </React.Fragment>
                 ))}

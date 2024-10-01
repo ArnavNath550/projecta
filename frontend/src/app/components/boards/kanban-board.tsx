@@ -48,7 +48,7 @@ export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
   
 
   return (
-    <div className="flex h-full w-full gap-10 overflow-scroll">
+    <div className="flex h-full w-full gap-5 overflow-scroll">
         {taskStatuses.map((y, i) => {
             return (
                 <Column

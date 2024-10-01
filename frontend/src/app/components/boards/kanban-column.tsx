@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { IconCalendar, IconTimeDuration0 } from "@tabler/icons-react";
+import { IconCalendar, IconPlus, IconTimeDuration0 } from "@tabler/icons-react";
 import { Chip } from "@/app/packages/ui/chip";
+import AnimatedDialog from "@/app/packages/ui/animatedDialog";
+import Button from "@/app/packages/ui/button";
+import CreateTaskDialog from "../dialogs/create-task-dialog";
 
 interface Card {
   title: string;
@@ -147,13 +150,23 @@ export const Column: React.FC<ColumnProps> = ({
   const filteredCards = cards.filter((c) => c.taskType === column);
 
   return (
-    <div className="w-[258px] shrink-0">
+    <div className="w-[265px] shrink-0">
         {/* {JSON.stringify(cards)} */}
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-medium text-sm ${headingColor}`}>{title}</h3>
-        <span className="rounded text-sm text-neutral-400">
-          {filteredCards.length}
-        </span>
+        <div className="flex flex-row items-center justify-center gap-2">
+          <AnimatedDialog
+          trigger={
+            <Button intent="unstyled" size="s">
+              <IconPlus size={12} color="#fff" />
+            </Button>
+          }
+          content={<CreateTaskDialog reloadTasks={() => console.log(5)}  setIsOpen={() => console.log(5)} taskStatus={title} />}
+          />
+          <span className="rounded text-sm text-neutral-400">
+            {filteredCards.length}
+          </span>
+        </div>
       </div>
       <div
         onDrop={handleDragEnd}
@@ -182,8 +195,8 @@ const Card: React.FC<CardProps> = ({ key, taskName, taskPriority, taskId, column
         layoutId={id}
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { taskName, id, column })}
-        className="cursor-grab rounded border border-surface-border bg-surface p-2.5 active:cursor-grabbing flex items-start flex-col gap-1"
       >
+        <div className="cursor-grab rounded border border-surface-border bg-surface p-2.5 active:cursor-grabbing flex items-start flex-col gap-1 hover:bg-surface-lighter">
         <div className="text-sm">{taskName}</div>
         <div className="flex flex-row gap-2">
             <div className="flex-row flex gap-1 items-center justify-center">
@@ -196,7 +209,7 @@ const Card: React.FC<CardProps> = ({ key, taskName, taskPriority, taskId, column
               <div>
                 <IconTimeDuration0 size={12} color="#fff" />
               </div>
-              <div className="text-sm font-normal text-on-surface">12th Nov</div>
+              <div className="text-sm font-normal text-on-surface">15th Nov</div>
             </div>
         </div>
         <div className="flex-row flex gap-1 items-center justify-center">
@@ -206,6 +219,7 @@ const Card: React.FC<CardProps> = ({ key, taskName, taskPriority, taskId, column
               <Chip icon={<div className="rounded-full w-2 h-2 bg-[#395aee]"></div>}
               size="s"
               label="Frontend" />
+            </div>
             </div>
       </motion.div>
     </>
