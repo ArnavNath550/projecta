@@ -1,16 +1,11 @@
 import { API_ENDPOINT } from '@/app/services/api';
 import React from 'react'
-import TableDataView from '../boards/table-data-view';
+import { KanbanBoard } from '../boards/kanban-board';
 
 function IssueAppContent() {
-  const [viewType, setViewType] = React.useState('BOARD');
   return (
     <div>
-      {viewType == 'BOARD' ? (
-        <TableDataView />
-      ) : (
-        <span>Kanban</span>
-      )}
+      <KanbanBoard />
     </div>
   )
 }

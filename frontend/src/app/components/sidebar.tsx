@@ -50,7 +50,7 @@ function Sidebar(props: Props) {
   ];  
 
   return (
-    <div className="w-[245px] h-full p-3.5 flex flex-col gap-2 animate-fade-in border-r-[1px] border-[#2c2e30]">
+    <div className="w-[255px] h-full p-3.5 flex flex-col gap-2 animate-fade-in border-r-[1px] border-[#202025]">
         <SidebarUserTab 
           image={session?.user.image}
           userName={session?.user.name}
