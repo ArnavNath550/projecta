@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { IconCalendar, IconTimeDuration0 } from "@tabler/icons-react";
+import { Chip } from "@/app/packages/ui/chip";
 
 interface Card {
   title: string;
@@ -170,7 +172,7 @@ export const Column: React.FC<ColumnProps> = ({
   );
 };
 
-const Card: React.FC<CardProps> = ({ key, taskName, taskId, column, handleDragStart }) => {
+const Card: React.FC<CardProps> = ({ key, taskName, taskPriority, taskId, column, handleDragStart }) => {
     const [id, setId] = React.useState(taskId);    
   return (
     <>
@@ -180,14 +182,31 @@ const Card: React.FC<CardProps> = ({ key, taskName, taskId, column, handleDragSt
         layoutId={id}
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { taskName, id, column })}
-        className="cursor-grab rounded border border-surface-border bg-surface p-2.5 active:cursor-grabbing"
+        className="cursor-grab rounded border border-surface-border bg-surface p-2.5 active:cursor-grabbing flex items-start flex-col gap-1"
       >
         <div className="text-sm">{taskName}</div>
         <div className="flex flex-row gap-2">
-            {id}
-            {/* meta tags here */}
-            {/* <Chip label="Medium" size="s" /> */}
+            <div className="flex-row flex gap-1 items-center justify-center">
+              <div>
+                <div className="rounded-full w-2 h-2 bg-[#ee8a39]"></div>
+              </div>
+              <div className="text-sm font-normal text-on-surface">{taskPriority}</div>
+            </div>
+            <div className="flex-row flex gap-1 items-center justify-center">
+              <div>
+                <IconTimeDuration0 size={12} color="#fff" />
+              </div>
+              <div className="text-sm font-normal text-on-surface">12th Nov</div>
+            </div>
         </div>
+        <div className="flex-row flex gap-1 items-center justify-center">
+              <Chip icon={<div className="rounded-full w-2 h-2 bg-[#ee394e]"></div>}
+              size="s"
+              label="Bug" />
+              <Chip icon={<div className="rounded-full w-2 h-2 bg-[#395aee]"></div>}
+              size="s"
+              label="Frontend" />
+            </div>
       </motion.div>
     </>
   );

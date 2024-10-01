@@ -28,7 +28,7 @@ const config: Config = {
       'surface-border': '#383b42',
       'surface': '#2a2c33',
       'surface-lighter': '#292C33',
-      'on-surface': '#9B9B9B',
+      'on-surface': '#c3c3c3',
       'on-surface-darker': '#16171b',
       'error': '#f74747',
       'transparent': 'transparent',
