@@ -79,8 +79,8 @@ export const getTasksByProjectId = async (req: Request, res: Response) => {
   try {
     const { projectId } = req.params;
 
-    // Find tasks by projectId
-    const tasks = await Task.find({ projectId });
+    // Find tasks by projectId and sort by createdAt in descending order
+    const tasks = await Task.find({ projectId }).sort({ createdAt: -1 });
 
     if (tasks.length === 0) {
       return res.status(404).json({ message: 'No tasks found for this project' });

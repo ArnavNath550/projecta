@@ -5,8 +5,8 @@ import { API_ENDPOINT } from "@/app/services/api";
 
 
 interface Task {
-  title: string;
-  id: string;
+  issue_title: string;
+ issue_id: string;
   status: string; // Status corresponds to taskStatus
   projectId: number;
 }
@@ -22,7 +22,8 @@ export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
       const issuesResponse = await axios.get(`${API_ENDPOINT}/issues/project/${projectId}`);
 
       // Set issues and statuses in the state
-      setIssues(issuesResponse.data.project_id);          
+      setIssues(issuesResponse.data);          
+      // console.log()
 
     } catch (error) {
       console.error("Error fetching issues or statuses", error);

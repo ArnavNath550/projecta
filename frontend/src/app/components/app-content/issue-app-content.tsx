@@ -10,8 +10,8 @@ function IssueAppContent() {
 
   return (
     <div>
-      {/* <KanbanBoard projectId={id} /> */}
-      <Workflows />
+      <KanbanBoard projectId={id} />
+      {/* <Workflows /> */}
     </div>
   )
 }

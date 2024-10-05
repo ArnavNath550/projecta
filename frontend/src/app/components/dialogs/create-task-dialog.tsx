@@ -44,13 +44,13 @@ const CreateTaskDialog = (props: Props) => {
   // Formik form handler
   const formik = useFormik({
     initialValues: {
-      taskName: '',
-      taskDescription: '',
+      issueName: '',
+      issueDescription: '',
     },
     validationSchema: Yup.object({
-      taskName: Yup.string().required('Task Name is required'),
-      taskDescription: Yup.string(),
-      taskPriority: Yup.string().oneOf(['low', 'medium', 'high'], 'Invalid priority'),
+      issueName: Yup.string().required('Issue Name is required'),
+      issueDescription: Yup.string(),
+      issuePriority: Yup.string().oneOf(['low', 'medium', 'high'], 'Invalid priority'),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       await createTask(values, setSubmitting, resetForm, props.reloadIssues);
@@ -59,20 +59,27 @@ const CreateTaskDialog = (props: Props) => {
 
   const createTask  = async(values: any, setSubmitting: any, resetForm: () => void, reloadIssues: () => void) => {
     try {
-      const taskId = generateObjectId();
+      const issueId = generateObjectId();
 
-      await axios.post(API_ENDPOINT + '/tasks', {
-        taskId,
-        projectId: params.id, 
-        taskCreator: session?.user.id,
-        taskAssignees: [],
-        taskName: values.taskName,
-        taskDescription: values.taskDescription,
-        taskPriority: 'medium',
-        taskType: props.taskStatus,
+      const response = await axios.post(API_ENDPOINT + '/issues', {
+        "issue_name": values.issueName,
+        "issue_description": values.issueDescription,
+        "issue_status": "Open",
+        "issue_priority": "High",
+        "issue_tags": {
+          "frontend": true,
+          "bug": true,
+          "urgent": true
+        },
+        "issue_identifier": "ISSUE-12345",
+        "issue_id": issueId,
+        "project_creator": session?.user.id,
+        "project_id": params.id
       });
 
+
       reloadIssues();
+      // console.log(`response`, response);
       props.setIsOpen(false);
       resetForm();
     } catch (error: unknown) {
@@ -98,29 +105,29 @@ const CreateTaskDialog = (props: Props) => {
         </div>
         <div className="flex flex-col gap-2 pt-3 pb-3">
           <Input
-            id="taskName"
-            name="taskName"
-            placeholder="Task Name"
+            id="issueName"
+            name="issueName"
+            placeholder="Issue Name"
             variant="unstyled"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.taskName}
+            value={formik.values.issueName}
           />
-          {formik.touched.taskName && formik.errors.taskName ? (
-            <div className="text-error text-xs">{formik.errors.taskName}</div>
+          {formik.touched.issueName && formik.errors.issueName ? (
+            <div className="text-error text-xs">{formik.errors.issueName}</div>
           ) : null}
 
           <TextArea
-            id="taskDescription"
-            name="taskDescription"
+            id="issueDescription"
+            name="issueDescription"
             placeholder="Write a description, a task brief, or collect ideas..."
             variant="unstyled"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.taskDescription}
+            value={formik.values.issueDescription}
           />
-          {formik.touched.taskDescription && formik.errors.taskDescription ? (
-            <div className="text-error text-xs">{formik.errors.taskDescription}</div>
+          {formik.touched.issueDescription && formik.errors.issueDescription ? (
+            <div className="text-error text-xs">{formik.errors.issueDescription}</div>
           ) : null}
 
           <div className="flex flex-row gap-2">
