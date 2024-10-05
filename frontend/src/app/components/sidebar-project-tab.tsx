@@ -9,8 +9,8 @@ type Props = {
 
 function SidebarProjectTab(props: Props) {
   return (
-    <div className="flex flex-row gap-2.5 justify-between items-center p-1 rouned-md cursor-pointer">
-        <div className="flex flex-row gap-2 5 items-center p-1 cursor-pointer">
+    <div className="flex flex-row gap-2.5 justify-between items-center p-1 rouned-md cursor-normal">
+        <div className="flex flex-row gap-2 5 items-center p-1 cursor-normal">
             <div className={`p-0.5 w-[25px] flex items-center justify-center text-sm bg-surface rounded-sm`}>
                 {props.projectIcon}
             </div>

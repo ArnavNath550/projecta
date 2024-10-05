@@ -7,7 +7,7 @@ type Props = {
 
 function ProjectSelectorItem(props: Props) {
   return (
-    <div className="flex flex-row justify-between items-center w-[500px] p-3 hover:bg-surface-lighter rounded-md cursor-pointer transition-all">
+    <div className="flex flex-row justify-between items-center w-[500px] p-3 hover:bg-surface-lighter rounded-md cursor-normal transition-all">
         <div className="flex flex-row gap-4 items-center w-[500px]">
         <div>
             <div className={`p-0.5 w-[50px] h-[50px] flex items-center justify-center text-2xl bg-on-surface rounded-md`}>

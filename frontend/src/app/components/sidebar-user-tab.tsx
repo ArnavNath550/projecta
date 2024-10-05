@@ -7,7 +7,7 @@ type Props = {
 
 function SidebarUserTab(props: Props) {
   return (
-    <div className="flex flex-row gap-2.5 items-center p-1 rouned-md cursor-pointer">
+    <div className="flex flex-row gap-2.5 items-center p-1 rouned-md cursor-normal">
         <div className="p-2 bg-surface rounded-sm" style={{backgroundImage: `url(${props.image})`, backgroundSize: 'contain'}}>
 
         </div>

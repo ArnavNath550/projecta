@@ -265,7 +265,7 @@ const Card = ({ title, id, column, priority, createdBy, handleDragStart }: CardP
       >
         <AnimatedDialog
           trigger={
-            <div className="rounded border-surface-border bg-[#1d1e21] p-3 flex flex-col gap-2 cursor-pointer hover:bg-surface-lighter items-start w-[270px] outline-none">
+            <div className="rounded border-surface-border bg-[#1d1e21] p-3 flex flex-col gap-2 cursor-normal hover:bg-surface-lighter items-start w-[270px] outline-none">
               <p className="text-sm text-neutral-100">{title}</p>
               <div className="flex flex-row gap-2">
                 <Chip label={priority} size="s" />

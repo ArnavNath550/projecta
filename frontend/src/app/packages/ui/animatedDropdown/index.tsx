@@ -53,7 +53,7 @@ const AnimatedDropdown = (props: Props) => {
                   {filteredItems.map((item) => (
                     <DropdownMenu.Item
                       key={item.value}
-                      className="group text-[13px] leading-none text-[#fff] rounded-[3px] flex items-center h-[25px] p-4 pl-3 relative select-none outline-none rounded-md data-[disabled]:pointer-events-none data-[highlighted]:bg-surface-lighter cursor-pointer data-[highlighted]:text-[#fff] hover:bg-surface-lighter"
+                      className="group text-[13px] leading-none text-[#fff] rounded-[3px] flex items-center h-[25px] p-4 pl-3 relative select-none outline-none rounded-md data-[disabled]:pointer-events-none data-[highlighted]:bg-surface-lighter cursor-normal data-[highlighted]:text-[#fff] hover:bg-surface-lighter"
                       onClick={() => props.itemAction(item.label)} // Call itemAction when item is clicked
                     >
                       {item.label}

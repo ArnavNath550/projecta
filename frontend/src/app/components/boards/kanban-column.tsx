@@ -29,6 +29,7 @@ interface DropIndicatorProps {
 interface CardProps {
   title: string;
   id: string;
+  issue_tags: [];
   column: string;
   handleDragStart: (e: React.DragEvent<HTMLDivElement>, card: Card) => void;
 }
@@ -61,11 +62,12 @@ export const Column: React.FC<ColumnProps> = ({
     
     if (before !== cardId) {
       let copy = [...cards]; // Clone the current cards array
+      console.log(`copy`, copy);
   
       // Use issue_id for consistency
       let cardToTransfer = copy.find((c) => c.issue_id === cardId);
       if (!cardToTransfer) return;
-      
+
       cardToTransfer = { ...cardToTransfer, column }; // Update the column of the dragged card
   
       // Filter out the card being transferred by its issue_id
@@ -75,6 +77,7 @@ export const Column: React.FC<ColumnProps> = ({
   
       if (moveToBack) {
         copy.push(cardToTransfer); // Add the card to the end of the list
+        console.log(`cardToTransfer`, cardToTransfer);
       } else {
         const insertAtIndex = copy.findIndex((el) => el.issue_id === before);
         if (insertAtIndex === -1) return; // Ensure the index is valid
@@ -152,7 +155,7 @@ export const Column: React.FC<ColumnProps> = ({
   const filteredCards = cards.filter((c) => c.issue_status === column);
 
   return (
-    <div className="w-[265px] shrink-0">
+    <div className="w-[285px] shrink-0">
         {/* {JSON.stringify(cards)} */}
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-medium text-sm ${headingColor}`}>{title}</h3>
@@ -187,7 +190,7 @@ export const Column: React.FC<ColumnProps> = ({
   );
 };
 
-const Card: React.FC<CardProps> = ({ key, issue_name, issue_priority, issue_id, column, handleDragStart }) => {
+const Card: React.FC<CardProps> = ({ key, issue_name, issue_priority, issue_tags, issue_id, column, handleDragStart }) => {
     const [id, setId] = React.useState(issue_id);    
   return (
     <>
@@ -198,7 +201,7 @@ const Card: React.FC<CardProps> = ({ key, issue_name, issue_priority, issue_id, 
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { issue_name, id, column })}
       >
-        <div className="cursor-grab rounded border border-surface-border bg-surface p-2.5 active:cursor-grabbing flex items-start flex-col gap-1 hover:bg-surface-lighter">
+        <div className="rounded border border-surface-border bg-surface p-2.5 flex items-start flex-col gap-1 hover:bg-[#23262b]">
         <div className="text-sm">{issue_name}</div>
         <div className="flex flex-row gap-2">
             <div className="flex-row flex gap-1 items-center justify-center">
@@ -216,11 +219,8 @@ const Card: React.FC<CardProps> = ({ key, issue_name, issue_priority, issue_id, 
         </div>
         <div className="flex-row flex gap-1 items-center justify-center">
               <Chip icon={<div className="rounded-full w-2 h-2 bg-[#ee394e]"></div>}
-              size="s"
-              label="Bug" />
-              <Chip icon={<div className="rounded-full w-2 h-2 bg-[#395aee]"></div>}
-              size="s"
-              label="Frontend" />
+                  size="s"
+                  label="Frontend" />
             </div>
             </div>
       </motion.div>
@@ -233,7 +233,7 @@ const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, column }) => {
     <div
       data-before={beforeId || "-1"}
       data-column={column}
-      className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0"
+      className="my-0.5 h-[5px] w-full bg-violet-400 opacity-0 active:bg-surface-lighter"
     />
   );
 };
