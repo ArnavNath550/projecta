@@ -13,50 +13,50 @@ interface Task {
 
 
 export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
-  const [tasks, setTasks] = useState([]);
+  const [issues, setIssues] = useState([]);
   const [taskStatuses, setTaskStatuses] = useState([]);
 
-  // Fetch tasks and taskStatuses when the component mounts
+  // Fetch issues and taskStatuses when the component mounts
+  const fetchIssues = async () => {
+    try {
+      const issuesResponse = await axios.get(`${API_ENDPOINT}/issues/project/${projectId}`);
+
+      // Set issues and statuses in the state
+      setIssues(issuesResponse.data.project_id);          
+
+    } catch (error) {
+      console.error("Error fetching issues or statuses", error);
+    }
+  };
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const tasksResponse = await axios.get(`${API_ENDPOINT}/tasks/project/${projectId}`);
-
-        // Set tasks and statuses in the state
-        setTasks(tasksResponse.data.tasks);          
-
-      } catch (error) {
-        console.error("Error fetching tasks or statuses", error);
-      }
-    };
-
-    fetchTasks();
+    fetchIssues();
   }, [projectId]);
 
   useEffect(() => {
     let updatedTaskStatuses = [...taskStatuses]; // Start with the current state
 
-    tasks.forEach((y) => {
-    if (!updatedTaskStatuses.includes(y.taskType)) {
-        updatedTaskStatuses.push(y.taskType); // Update the local array
+    issues.forEach((y) => {
+    if (!updatedTaskStatuses.includes(y.issue_status)) {
+        updatedTaskStatuses.push(y.issue_status); // Update the local array
     }
     });
 
     // Update the state only once, after the loop
     setTaskStatuses(updatedTaskStatuses);
-  }, [tasks]);
-  
+  }, [issues]);
 
   return (
     <div className="flex h-full w-full gap-5 overflow-scroll">
         {taskStatuses.map((y, i) => {
             return (
                 <Column
+                    key={y.issue_id}
                     title={y}
                     column={y}
                     headingColor="text-neutral-500"
-                    cards={tasks}
-                    setCards={setTasks}
+                    cards={issues}
+                    setCards={setIssues}
+                    reloadIssues={fetchIssues}
                 />
             )     
       })}

@@ -4,7 +4,8 @@ import React from 'react';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   id: string; // id is required for accessibility
-  variant?: 'default' | 'unstyled'; // Variant prop for styling
+  variant?: 'default' | 'unstyled'; // Variant prop for styling,
+  classes?: string;
 }
 
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -13,10 +14,10 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
   variant?: 'default' | 'unstyled'; // Variant prop for styling
 }
 
-export const Input: React.FC<InputProps> = ({ label, id, variant = 'default', ...inputProps }) => {
+export const Input: React.FC<InputProps> = ({ label, id, variant = 'default', classes, ...inputProps }) => {
     const baseStyles =
     'outline-none resize-none rounded-md border-[1px] drop-shadow-sm transition-all';
-  const defaultStyles = 'p-2 pl-3 pr-3  border-surface-lighter bg-background text-sm hover:drop-shadow-md';
+  const defaultStyles = 'p-2 pl-3 pr-3  border-surface-lighter bg-background text-sm hover:drop-shadow-md hover:bg-background-darker';
   const unstyledStyles = 'border-none bg-transparent p-0 shadow-none font-medium text-2xl hover:shadow-none p-0';
 
   return (
@@ -31,7 +32,7 @@ export const Input: React.FC<InputProps> = ({ label, id, variant = 'default', ..
       )}
       <input
         id={id}
-        className={`${baseStyles} ${variant === 'default' ? defaultStyles : unstyledStyles}`}
+        className={`${baseStyles} ${variant === 'default' ? defaultStyles : unstyledStyles} ${classes}`}
         {...inputProps}
       />
     </div>

@@ -7,47 +7,95 @@ import Button from '@/app/packages/ui/button';
 import { Input, TextArea } from '@/app/packages/ui/input';
 import { Chip } from '@/app/packages/ui/chip';
 import { IconChevronRight } from '@tabler/icons-react';
-import { postDataMethod } from '@/app/services/api';
+import { API_ENDPOINT, postDataMethod } from '@/app/services/api';
 import { ObjectId } from 'bson'
 import { generateObjectId } from '@/app/helpers';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { userAgent } from 'next/server';
 
 
 const CreateProjectDialog = () => {
   const {data: session} = useSession();
   const router = useRouter();
-  // Formik form handler
-  const formik = useFormik({
-    initialValues: {
-      projectName: '',
-      projectDescription: '',
-    },
-    validationSchema: Yup.object({
-      projectName: Yup.string().required('Project Name is required'),
-      projectDescription: Yup.string(),
-    }),
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
-      try {
-        const projectId = generateObjectId();
-        const response = await postDataMethod('http://localhost:8080/api/projects/', {
-          projectId: projectId, // Generating a unique project ID
-          projectName: values.projectName,
-          projectDescription: values.projectDescription,
-          projectCreator: session?.user.id,
-          projectIcon: 'https://example.com/icon.png', // Static for now, can be dynamic
-        });
-        console.log('Project created successfully:', response);
-        // router.push("/client/[id]/", {id: response.projectId});
-        window.location.href = "/client/"+response.projectId+"/";
-        // resetForm();
-      } catch (error) {
-        console.error('Error creating project:', session?.user.id);
-      } finally {
-        setSubmitting(false);
-      }
-    },
-  });
+
+// Formik form handler
+const formik = useFormik({
+  initialValues: {
+    projectName: '',
+    projectDescription: '',
+  },
+  validationSchema: Yup.object({
+    projectName: Yup.string().required('Project Name is required'),
+    projectDescription: Yup.string(),
+  }),
+  onSubmit: async (values, { setSubmitting, resetForm }) => {
+    try {
+      const projectId = generateObjectId();
+      // Create project
+      const response = await postDataMethod(API_ENDPOINT + '/api/projects/', {
+        "project_name": values.projectName,
+        "project_icon": "",
+        "project_identifer": values.projectName,
+        "project_creator": session?.user.id,
+        "project_id": projectId
+      });
+      
+
+      // Hard-coded tasks to insert after project creation
+      // const issues = [
+      //   {
+      //     taskId: generateObjectId(),
+      //     taskName: "Fix login bug",
+      //     taskDescription: "Resolve the issue where login tokens are not being persisted",
+      //     taskPriority: "high",
+      //     taskType: "bug"
+      //   },
+      //   {
+      //     taskId: generateObjectId(),
+      //     taskName: "Improve UI responsiveness",
+      //     taskDescription: "Enhance the layout on mobile devices for better usability",
+      //     taskPriority: "medium",
+      //     taskType: "feature"
+      //   },
+      //   {
+      //     taskId: generateObjectId(),
+      //     taskName: "Database optimization",
+      //     taskDescription: "Optimize queries to reduce response time for large datasets",
+      //     taskPriority: "low",
+      //     taskType: "optimization"
+      //   }
+      // ];
+
+      // // Insert each task under the created project
+      // for (const issue of issues) {
+      //   await postDataMethod('http://localhost:8080/api/tasks', {
+      //     taskId: issue.taskId,
+      //     projectId: response.projectId, // Use the created project ID
+      //     taskCreator: session?.user.id,
+      //     taskAssignees: [],
+      //     taskName: issue.taskName,
+      //     taskDescription: issue.taskDescription,
+      //     taskPriority: issue.taskPriority,
+      //     taskType: issue.taskType
+      //   });
+      // }
+
+      // console.log('All tasks added successfully');
+      
+      // Redirect to project page
+      window.location.href = "/client/" + response.projectId + "/";
+
+      // Optionally reset the form
+      // resetForm();
+    } catch (error) {
+      console.error('Error creating project or tasks:', session?.user.id, error);
+    } finally {
+      setSubmitting(false);
+    }
+  },
+});
+
 
   return (
     <div className="w-[500px] h-full p-[25px] pl-[30px] pr-[30px]">

@@ -13,9 +13,9 @@ type ContentType = {
 function AppContent(props: ContentType) {
   const { data: session } = useSession();
   return (
-    <div className="w-full h-full p-5 pt-2 overflow-scroll relative">
+    <div className="w-full h-full pt-4 overflow-scroll relative pr-0">
       <AppContentNav projectData={props.projectData} projectDataLoading={props.projectDataLoading} />
-      <div className="pt-2 pb-3 w-full h-full">
+      <div className="pt-5 pb-3 w-full h-full p-5">
         <div className="p-2 rounded-md w-full h-full relative">
           {props.content}
         </div>

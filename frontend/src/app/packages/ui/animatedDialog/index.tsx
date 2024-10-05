@@ -23,7 +23,7 @@ function AnimatedDialog({ trigger, content }: Props) {
 
   return (  
 <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Trigger>
+      <Dialog.Trigger style={{width: "100%"}}>
         {trigger}
       </Dialog.Trigger>
       <Dialog.Portal>

@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #101010;
+  --background: #15151c;
 }
 
 /* fonts */
@@ -65,6 +65,9 @@
   font-style: normal;
 }
 
+* {
+  outline: none;
+}
 
 
 html,body {
@@ -273,4 +276,39 @@ html,body {
   -webkit-transition-duration: 0.5s;
      -moz-transition-duration: 0.5s;
           transition-duration: 0.5s;
+}
+
+.gradient-animation {
+  animation: 1.2s cubic-bezier(0.6, 0, 0.15, 1) 0.3s 1 normal both running runningAnimation;
+    width: 176px;
+    height: 176px;
+    background: conic-gradient(from 230.29deg at 51.63% 52.16%, rgb(36, 0, 255) 0deg, rgb(255, 0, 153) 67.5deg, rgb(255, 29, 29) 198.75deg, rgb(158, 245, 27) 251.25deg, rgb(80, 53, 255) 301.88deg, rgb(255, 30, 255) 360deg);
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    top: -65px;
+    left: 0px;
+    right: 0px;
+    filter: blur(16px);
+    text-align: center;
+    color: rgb(255, 0, 0);
+}
+
+@keyframes runningAnimation {
+  0% {
+    transform: scale(0.5, 0.2);
+    opacity: 0;
+    animation-timing-function: ease-in;
+  }
+
+
+  20% {
+    transform: scale(0.6, 0.9);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(20, 0.3);
+    opacity: 0;
+  }
 }

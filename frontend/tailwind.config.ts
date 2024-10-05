@@ -21,13 +21,15 @@ const config: Config = {
     //   'error': '#f74747'
     // },
     colors: {
-      'background': '#030303',
+      'background': '#15151c',
+      'background-darker': '#030303',
+      'sidebar': '#151519',
       'brand-color': '#7368F5',
       'brand-lighter-color': '#9974da',
       'brand-darker-color': '#574ebe',
       'surface-border': '#383b42',
       'surface': '#2a2c33',
-      'surface-lighter': '#292C33',
+      'surface-lighter': '#393d45',
       'on-surface': '#c3c3c3',
       'on-surface-darker': '#16171b',
       'error': '#f74747',
@@ -38,6 +40,8 @@ const config: Config = {
     },
     transitionDelay: {
       0: "0ms",
+      200: "200ms",
+      400: "400ms",
     },
     keyframes: {
       "fade-in": {
@@ -98,6 +102,10 @@ const config: Config = {
           transform: "scale(0.98)",
         },
       },
+      "fade-in-left": {
+        from: { opacity: "0", transform: "translateX(-2px)" },
+        to: { opacity: "1", transform: "none" },
+      },
     },
     animation: {
       "fade-in": "fade-in 250ms var(--animation-delay, 0ms) ease forwards",
@@ -111,6 +119,7 @@ const config: Config = {
       zap: "zap 2250ms calc(var(--index) * 20ms) linear infinite",
       bounce: "bounce 240ms ease 0s 1 running",
       'fade-up': 'fade-up 0.3s ease-out',
+      "fade-in-left": "fade-in-left 1s cubic-bezier(1, 0.01, 0.17, 1.01) forwards",
     },
     backgroundImage: {
       "primary-gradient":
@@ -127,6 +136,8 @@ const config: Config = {
         "radial-gradient(circle at bottom center,var(--color),transparent 70%)",
       "glass-gradient":
         "linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 100%)",
+      "navbar-gradient": 
+        "linear-gradient(45deg, #202028, #15151c)"
     },
   },
   plugins: [],

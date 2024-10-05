@@ -52,7 +52,7 @@ function TasksPage() {
       ) : (
         <div className="w-full h-full flex flex-row">
       <Sidebar projectData={projectData} projectDataLoading={projectDataLoading} sidebarProjectItems={sidebarProjectItems} setAppContent={setAppContent} />
-      <AppContent projectData={projectData} projectDataLoading={projectDataLoading} content={<IssueAppContent />}/>
+      <AppContent projectData={projectData} projectDataLoading={projectDataLoading} content={<span>backlogs</span>}/>
       </div>
       )}
     </>

@@ -31,7 +31,7 @@ const TasksAppContent = () => {
 
   const params = useParams<{ id: number }>();
 
-  const fetchTasks = async () => {
+  const reloadIssues = async () => {
     try {
       const response = await axios.get(API_ENDPOINT + '/tasks/project/' + params.id);
       const tasks = response.data;
@@ -49,7 +49,7 @@ const TasksAppContent = () => {
   };
 
   React.useEffect(() => {
-    fetchTasks();
+    reloadIssues();
   }, [params.id]);
 
   const allColumns = ['todo', 'in-progress', 'done'];
@@ -78,7 +78,7 @@ const TasksAppContent = () => {
           headingColor="text-neutral-500"
           cards={tasks}
           setCards={setCards}
-          fetchTasks={fetchTasks}
+          reloadIssues={reloadIssues}
         />
       ))}
     </div>
@@ -91,7 +91,7 @@ type ColumnProps = {
   cards: CardType[];
   column: string;
   setCards: Dispatch<SetStateAction<CardType[]>>;
-  fetchTasks: any;
+  reloadIssues: any;
 };
 
 const Column = ({
@@ -100,7 +100,7 @@ const Column = ({
   cards,
   column,
   setCards,
-  fetchTasks,
+  reloadIssues,
 }: ColumnProps) => {
   const [active, setActive] = useState(false);
 
@@ -200,7 +200,7 @@ const Column = ({
             trigger={<Button intent="unstyled" size="s">
               <IconPlus size={20} color="#fff" />
             </Button>}
-            content={<CreateTaskDialog taskStatus={title} reloadTasks={fetchTasks} setIsOpen={(openState: boolean) => setTaskModalOpen(openState)}
+            content={<CreateTaskDialog taskStatus={title} reloadIssues={reloadIssues} setIsOpen={(openState: boolean) => setTaskModalOpen(openState)}
             />}
             isOpen={taskModalOpen}
             setIsOpen={() => setTaskModalOpen}

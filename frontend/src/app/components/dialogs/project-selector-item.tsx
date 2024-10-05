@@ -16,7 +16,7 @@ function ProjectSelectorItem(props: Props) {
         </div>
         <div className="flex flex-col gap-2">
             <div className="font-medium text-lg">
-                {props.data.projectName}
+                {props.data.project_name}
             </div>
             <div className="flex flex-row items-center ml-[10px]">
                 <div className="w-[30px] h-[30px] bg-surface-lighter border-[1px] border-surface-border rounded-full -ml-[10px] z-30"></div>

@@ -31,6 +31,7 @@ interface ButtonProps extends VariantProps<typeof buttonStyles> {
   disabled?: boolean;
   onClick?: () => void;
   children: React.ReactNode;
+  classes?: string;
 }
 
 // Button component
@@ -41,13 +42,14 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   onClick,
   children,
+  classes
 }) => {
   return (
     <button
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={cn(buttonStyles({ intent, size }))}
+      className={cn(buttonStyles({ intent, size })) + " " + classes}
     >
       {children}
     </button>

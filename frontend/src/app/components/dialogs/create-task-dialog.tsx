@@ -17,7 +17,7 @@ import { API_ENDPOINT } from '@/app/services/api';
 
 type Props = {
   taskStatus: string,
-  reloadTasks: () => any,
+  reloadIssues: () => any,
   setIsOpen: () => void
 }
 
@@ -53,11 +53,11 @@ const CreateTaskDialog = (props: Props) => {
       taskPriority: Yup.string().oneOf(['low', 'medium', 'high'], 'Invalid priority'),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      await createTask(values, setSubmitting, resetForm);
+      await createTask(values, setSubmitting, resetForm, props.reloadIssues);
     },
   });
 
-  const createTask  = async(values: any, setSubmitting: any, resetForm: () => void) => {
+  const createTask  = async(values: any, setSubmitting: any, resetForm: () => void, reloadIssues: () => void) => {
     try {
       const taskId = generateObjectId();
 
@@ -72,7 +72,7 @@ const CreateTaskDialog = (props: Props) => {
         taskType: props.taskStatus,
       });
 
-      props.reloadTasks();
+      reloadIssues();
       props.setIsOpen(false);
       resetForm();
     } catch (error: unknown) {
@@ -139,13 +139,6 @@ const CreateTaskDialog = (props: Props) => {
               itemAction={(value: string) => setPriority(value)}
               />
 
-              <AnimatedDropdown
-              trigger={
-                <Chip size="s" label="Assignee" icon={<IconUserCircle size={14}/>}/>
-              }
-              dropdownItems={priorityDropdownItems}
-              itemAction={(value: string) => setPriority(value)}
-              />
               <AnimatedDropdown
               trigger={
                 <Chip size="s" label="Due Date" icon={<IconTimeDuration0 size={14}/>}/>

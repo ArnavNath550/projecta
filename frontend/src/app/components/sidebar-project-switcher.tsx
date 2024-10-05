@@ -8,7 +8,7 @@ type Props = {
 
 function SidebarProjectSwitcher(props: Props) {
   return (
-    <div className="bg-surface-lighter flex flex-row justify-between items-center p-1 rounded-md cursor-pointer hover:bg-surface transition-all">
+    <div className="bg-surface-lighter flex flex-row justify-between items-center p-1 rounded-md cursor-pointer hover:bg-surface transition-all w-full">
         <div className="flex flex-row gap-2.5 items-center">
             <div className={`p-0.5 w-[25px] flex items-center justify-center text-sm bg-surface rounded-sm`}>
                 {props.projectIcon}

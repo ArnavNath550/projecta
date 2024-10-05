@@ -8,11 +8,16 @@ import { API_ENDPOINT } from '@/app/services/api'
 import axios from 'axios'
 import { IconStack2Filled } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+
 
 function ProjectSelectorDialog() {
   const {data: session} = useSession();
   const [projectsData, setProjects] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+
+
+
   const fetchProjectsByUser = async() => {
     setLoading(true);
     const res = await axios.get(API_ENDPOINT + "/projects/user/"+session.user.id);
@@ -61,14 +66,11 @@ function ProjectSelectorDialog() {
                 Build your next amazing project
               </span>
             </div>
-            <AnimatedDialog
-            trigger={
-            <Button intent="primary" size="l">
-              <span>Create Project</span>
-            </Button>
-            }
-            content={<CreateProjectDialog />}
-            />
+            <Link href="/client/create">
+              <Button intent="primary" size="l">
+                <span>Create Project</span>
+              </Button>
+            </Link>
           </div>
         </div>
         <div class="h-[290px] overflow-scroll">

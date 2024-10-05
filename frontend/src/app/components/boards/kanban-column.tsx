@@ -18,6 +18,7 @@ interface ColumnProps {
   cards: Card[];
   column: string;
   setCards: React.Dispatch<React.SetStateAction<Card[]>>;
+  reloadIssues: () => void
 }
 
 interface DropIndicatorProps {
@@ -38,6 +39,7 @@ export const Column: React.FC<ColumnProps> = ({
   cards,
   column,
   setCards,
+  reloadIssues
 }) => {
   const [active, setActive] = useState<boolean>(false);
 
@@ -60,21 +62,21 @@ export const Column: React.FC<ColumnProps> = ({
     if (before !== cardId) {
       let copy = [...cards]; // Clone the current cards array
   
-      // Use taskId for consistency
-      let cardToTransfer = copy.find((c) => c.taskId === cardId);
+      // Use issue_id for consistency
+      let cardToTransfer = copy.find((c) => c.issue_id === cardId);
       if (!cardToTransfer) return;
       
       cardToTransfer = { ...cardToTransfer, column }; // Update the column of the dragged card
   
-      // Filter out the card being transferred by its taskId
-      copy = copy.filter((c) => c.taskId !== cardId);
+      // Filter out the card being transferred by its issue_id
+      copy = copy.filter((c) => c.issue_id !== cardId);
   
       const moveToBack = before === "-1"; // Check if the card should move to the back of the column
   
       if (moveToBack) {
         copy.push(cardToTransfer); // Add the card to the end of the list
       } else {
-        const insertAtIndex = copy.findIndex((el) => el.taskId === before);
+        const insertAtIndex = copy.findIndex((el) => el.issue_id === before);
         if (insertAtIndex === -1) return; // Ensure the index is valid
   
         copy.splice(insertAtIndex, 0, cardToTransfer); // Insert the card at the specified index
@@ -147,7 +149,7 @@ export const Column: React.FC<ColumnProps> = ({
     setActive(false);
   };
 
-  const filteredCards = cards.filter((c) => c.taskType === column);
+  const filteredCards = cards.filter((c) => c.issue_status === column);
 
   return (
     <div className="w-[265px] shrink-0">
@@ -161,7 +163,7 @@ export const Column: React.FC<ColumnProps> = ({
               <IconPlus size={12} color="#fff" />
             </Button>
           }
-          content={<CreateTaskDialog reloadTasks={() => console.log(5)}  setIsOpen={() => console.log(5)} taskStatus={title} />}
+          content={<CreateTaskDialog reloadIssues={reloadIssues}  setIsOpen={() => console.log(5)} taskStatus={title} />}
           />
           <span className="rounded text-sm text-neutral-400">
             {filteredCards.length}
@@ -185,8 +187,8 @@ export const Column: React.FC<ColumnProps> = ({
   );
 };
 
-const Card: React.FC<CardProps> = ({ key, taskName, taskPriority, taskId, column, handleDragStart }) => {
-    const [id, setId] = React.useState(taskId);    
+const Card: React.FC<CardProps> = ({ key, issue_name, issue_priority, issue_id, column, handleDragStart }) => {
+    const [id, setId] = React.useState(issue_id);    
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
@@ -194,16 +196,16 @@ const Card: React.FC<CardProps> = ({ key, taskName, taskPriority, taskId, column
         layout
         layoutId={id}
         draggable="true"
-        onDragStart={(e) => handleDragStart(e, { taskName, id, column })}
+        onDragStart={(e) => handleDragStart(e, { issue_name, id, column })}
       >
         <div className="cursor-grab rounded border border-surface-border bg-surface p-2.5 active:cursor-grabbing flex items-start flex-col gap-1 hover:bg-surface-lighter">
-        <div className="text-sm">{taskName}</div>
+        <div className="text-sm">{issue_name}</div>
         <div className="flex flex-row gap-2">
             <div className="flex-row flex gap-1 items-center justify-center">
               <div>
                 <div className="rounded-full w-2 h-2 bg-[#ee8a39]"></div>
               </div>
-              <div className="text-sm font-normal text-on-surface">{taskPriority}</div>
+              <div className="text-sm font-normal text-on-surface">{issue_priority}</div>
             </div>
             <div className="flex-row flex gap-1 items-center justify-center">
               <div>
