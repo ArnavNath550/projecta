@@ -5,6 +5,7 @@ import { Chip } from "@/app/packages/ui/chip";
 import AnimatedDialog from "@/app/packages/ui/animatedDialog";
 import Button from "@/app/packages/ui/button";
 import CreateTaskDialog from "../dialogs/create-task-dialog";
+import IssueDetailDialog from "../dialogs/issue-detail-dialog";
 
 interface Card {
   title: string;
@@ -29,6 +30,7 @@ interface DropIndicatorProps {
 interface CardProps {
   title: string;
   id: string;
+  issue_description: string,
   issue_tags: [];
   column: string;
   handleDragStart: (e: React.DragEvent<HTMLDivElement>, card: Card) => void;
@@ -43,6 +45,7 @@ export const Column: React.FC<ColumnProps> = ({
   reloadIssues
 }) => {
   const [active, setActive] = useState<boolean>(false);
+  const [issueDialogOpen, setIssueDialogOpen] = useState<boolean>(false);
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, card: Card) => {
     e.dataTransfer.setData("cardId", card.id);
@@ -166,7 +169,8 @@ export const Column: React.FC<ColumnProps> = ({
               <IconPlus size={12} color="#fff" />
             </Button>
           }
-          content={<CreateTaskDialog reloadIssues={reloadIssues}  setIsOpen={() => console.log(5)} taskStatus={title} />}
+          content={<CreateTaskDialog reloadIssues={reloadIssues}  taskStatus={title} setCloseIssueDialog={setIssueDialogOpen} />}
+          isOpen={issueDialogOpen} setIsOpen={setIssueDialogOpen}
           />
           <span className="rounded text-sm text-neutral-400">
             {filteredCards.length}
@@ -190,40 +194,43 @@ export const Column: React.FC<ColumnProps> = ({
   );
 };
 
-const Card: React.FC<CardProps> = ({ key, issue_name, issue_priority, issue_tags, issue_id, column, handleDragStart }) => {
+const Card: React.FC<CardProps> = ({ key, issue_name, issue_priority, issue_description, issue_tags, issue_id, column, handleDragStart }) => {
     const [id, setId] = React.useState(issue_id);    
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
-      <motion.div
-        layout
-        layoutId={id}
-        draggable="true"
-        onDragStart={(e) => handleDragStart(e, { issue_name, id, column })}
-      >
-        <div className="rounded border border-surface-border bg-surface p-2.5 flex items-start flex-col gap-1 hover:bg-[#23262b]">
-        <div className="text-sm">{issue_name}</div>
-        <div className="flex flex-row gap-2">
-            <div className="flex-row flex gap-1 items-center justify-center">
-              <div>
-                <div className="rounded-full w-2 h-2 bg-[#ee8a39]"></div>
+      <AnimatedDialog 
+        trigger={<motion.div
+          layout
+          layoutId={id}
+          draggable="true"
+          onDragStart={(e) => handleDragStart(e, { issue_name, id, column })}
+        >
+          <div className="rounded border border-surface-border bg-surface p-2.5 flex items-start flex-col gap-1 hover:bg-[#23262b] text-left">
+          <div className="text-sm text-left">{issue_name}</div>
+          <div className="flex flex-row gap-2">
+              <div className="flex-row flex gap-1 items-center justify-center">
+                <div>
+                  <div className="rounded-full w-2 h-2 bg-[#ee8a39]"></div>
+                </div>
+                <div className="text-sm font-normal text-on-surface">{issue_priority}</div>
               </div>
-              <div className="text-sm font-normal text-on-surface">{issue_priority}</div>
-            </div>
-            <div className="flex-row flex gap-1 items-center justify-center">
-              <div>
-                <IconTimeDuration0 size={12} color="#fff" />
+              <div className="flex-row flex gap-1 items-center justify-center">
+                <div>
+                  <IconTimeDuration0 size={12} color="#fff" />
+                </div>
+                <div className="text-sm font-normal text-on-surface">15th Nov</div>
               </div>
-              <div className="text-sm font-normal text-on-surface">15th Nov</div>
-            </div>
-        </div>
-        <div className="flex-row flex gap-1 items-center justify-center">
-              <Chip icon={<div className="rounded-full w-2 h-2 bg-[#ee394e]"></div>}
-                  size="s"
-                  label="Frontend" />
-            </div>
-            </div>
-      </motion.div>
+          </div>
+          <div className="flex-row flex gap-1 items-center justify-center">
+                <Chip icon={<div className="rounded-full w-2 h-2 bg-[#ee394e]"></div>}
+                    size="s"
+                    label="Frontend" />
+              </div>
+              </div>
+        </motion.div>}
+        content={<IssueDetailDialog issueTitle={issue_name} issueId={issue_id} issueDescription={issue_description}/>}
+      />
     </>
   );
 };

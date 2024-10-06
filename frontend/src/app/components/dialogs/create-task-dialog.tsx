@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import Button from '@/app/packages/ui/button';
 import { Input, TextArea } from '@/app/packages/ui/input';
 import { Chip } from '@/app/packages/ui/chip';
-import { IconChevronDown, IconChevronRight, IconLineDashed, IconTags, IconTimeDuration0, IconUser, IconUserCircle, IconWifi2 } from '@tabler/icons-react';
+import { IconCalendar, IconChevronDown, IconChevronRight, IconLineDashed, IconTags, IconTimeDuration0, IconUser, IconUserCircle, IconWifi2 } from '@tabler/icons-react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
@@ -20,7 +20,7 @@ import Editor from '../editor';
 type Props = {
   taskStatus: string,
   reloadIssues: () => any,
-  setIsOpen: () => void
+  setCloseIssueDialog: () => void
 }
 
 const CreateTaskDialog = (props: Props) => {
@@ -36,12 +36,13 @@ const CreateTaskDialog = (props: Props) => {
     initialValues: {
       issueName: issueName,
       issueDescription: issueDescription,
+      issuePriority: priority
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
       issueName: Yup.string().required('Issue Name is required'),
       issueDescription: Yup.string(),
-      issuePriority: Yup.string().oneOf(['low', 'medium', 'high'], 'Invalid priority'),
+      issuePriority: Yup.string().oneOf(['low', 'medium', 'high'], 'Invalid priority').required(),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       await createTask(values, setSubmitting, resetForm, props.reloadIssues);
@@ -56,7 +57,7 @@ const CreateTaskDialog = (props: Props) => {
         "issue_name": values.issueName,
         "issue_description": values.issueDescription,
         "issue_status": "Open",
-        "issue_priority": "High",
+        "issue_priority": values.issuePriority,
         "issue_tags": {
           "frontend": true,
           "bug": true,
@@ -69,7 +70,7 @@ const CreateTaskDialog = (props: Props) => {
       });
 
       reloadIssues();
-      props.setIsOpen(false);
+      props.setCloseIssueDialog(false);
       resetForm();
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -84,13 +85,45 @@ const CreateTaskDialog = (props: Props) => {
 
   useKeyPress(['Enter'], formik.submitForm);
 
+  // tags
+  const [tags, setTags] = React.useState<{ label: string, value: string }[]>([]);
+  const [issueViewState, setIssueViewState] = React.useState<String>("ISSUE");
+
+  interface Tag {
+    id: number;
+    tag_name: string;
+    tag_colour: string;
+    tag_id: string;
+    tag_creator: string;
+    project_id: string;
+    created_at: string;
+  }
+
+  React.useEffect(() => {
+    // Fetch tags when the component mounts
+    const fetchTags = async () => {
+      try {
+        const response = await axios.get<{ data: Tag[] }>(API_ENDPOINT + `/tags/project/${params.id}`);
+        const tagItems = response.data.data.map(tag => ({
+          label: tag.tag_name,
+          value: tag.tag_name.toUpperCase(), // Adjust value based on your logic
+        }));
+        setTags(tagItems);
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+      }
+    };
+
+    fetchTags();
+  }, []);
+
   return (
     <div className="w-[650px] h-full p-[15px]">
       <form onSubmit={formik.handleSubmit}>
         <div className="flex flex-row gap-2 items-center">
           <Chip label="Project.A" size="s" />
           <IconChevronRight size={12} color="#fff" />
-          <span className="font-normal text-xs">New Task</span>
+          <span className="font-normal text-xs">New Issue</span>
         </div>
         <div className="flex flex-col gap-2 pt-3 pb-3">
           {/* Update Issue Name input field to reflect state */}
@@ -118,19 +151,27 @@ const CreateTaskDialog = (props: Props) => {
             <div className="text-error text-xs">{formik.errors.issueDescription}</div>
           ) : null}
 
-          <div className="flex flex-row gap-2">
-            {/* Example Priority Dropdown */}
+          <div className="flex flex-row gap-2 items-center">
             <AnimatedDropdown
               trigger={
-                <Chip size="s" label={priority ? priority : "Priority"} icon={<IconLineDashed size={14}/>}/>
+                <Chip size="base" label={priority ? priority : "Priority"} icon={<IconLineDashed size={14}/>}/>
               }
               dropdownItems={[
                 { label: 'Low', value: 'LOW' },
                 { label: 'Medium', value: 'MEDIUM' },
                 { label: 'High', value: 'HIGH' }
               ]}
-              itemAction={(value: string) => setPriority(value)}
+              itemAction={(value: string) => setPriority(value.toLowerCase())}
             />
+            <AnimatedDropdown
+              trigger={
+                <Chip size="base" label={priority ? priority : "Tags"} icon={<IconLineDashed size={14}/>}/>
+              }
+              dropdownItems={tags}
+              itemAction={(value: string) => setPriority(value.toLowerCase())}
+            />
+
+            <Chip size="base" label={"Due Date"} icon={<IconCalendar size={14}/>}/>
           </div>
         </div>
 

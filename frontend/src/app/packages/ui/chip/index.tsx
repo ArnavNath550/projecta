@@ -10,7 +10,7 @@ interface ChipProps {
 
 const sizeClasses = {
   s: 'text-[11px] p-1.5',
-  base: 'text-sm px-3 py-1.5',
+  base: 'text-[12px] p-3.5',
   l: 'text-md px-4 py-2',
 };
 
