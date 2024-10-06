@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Column } from "./kanban-column"; // Assuming you have these column components
 import { API_ENDPOINT } from "@/app/services/api";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { supabase } from "@/app/api/db";
 
 
 interface Task {
@@ -32,6 +34,18 @@ export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
   useEffect(() => {
     fetchIssues();
   }, [projectId]);
+
+    const channel = supabase
+    .channel('postgresChangesChannel')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'issues',
+      filter: `project_id=eq.${projectId}`  // Filtering based on project_id
+    }, payload => {
+      fetchIssues();
+    })
+    .subscribe();
 
   useEffect(() => {
     let updatedTaskStatuses = [...taskStatuses]; // Start with the current state

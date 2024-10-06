@@ -15,6 +15,8 @@ import TooltipButton from '@/app/packages/ui/animatedTooltip';
 import { useKeyPress } from '../../../../helpers';
 import { API_ENDPOINT } from '@/app/services/api';
 
+import Editor from '../editor';
+
 type Props = {
   taskStatus: string,
   reloadIssues: () => any,
@@ -23,30 +25,19 @@ type Props = {
 
 const CreateTaskDialog = (props: Props) => {
   const { data: session } = useSession();
-  const [priorityDropdownItems, setPriorityDropdownItems] = React.useState([
-    {
-      'label': 'Low',
-      'value': 'LOW'
-    },
-    {
-      'label': 'Medium',
-      'value': 'MEDIUM'
-    },
-    {
-      'label': 'High',
-      'value': 'HIGH'
-    }
-  ]);
   const [priority, setPriority] = React.useState("");
+  const [issueName, setIssueName] = React.useState("");
+  const [issueDescription, setIssueDescription] = React.useState("");
 
   const params = useParams();
   
   // Formik form handler
   const formik = useFormik({
     initialValues: {
-      issueName: '',
-      issueDescription: '',
+      issueName: issueName,
+      issueDescription: issueDescription,
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
       issueName: Yup.string().required('Issue Name is required'),
       issueDescription: Yup.string(),
@@ -77,9 +68,7 @@ const CreateTaskDialog = (props: Props) => {
         "project_id": params.id
       });
 
-
       reloadIssues();
-      // console.log(`response`, response);
       props.setIsOpen(false);
       resetForm();
     } catch (error: unknown) {
@@ -104,12 +93,16 @@ const CreateTaskDialog = (props: Props) => {
           <span className="font-normal text-xs">New Task</span>
         </div>
         <div className="flex flex-col gap-2 pt-3 pb-3">
+          {/* Update Issue Name input field to reflect state */}
           <Input
             id="issueName"
             name="issueName"
             placeholder="Issue Name"
             variant="unstyled"
-            onChange={formik.handleChange}
+            onChange={(e) => {
+              formik.handleChange(e); // Formik handle change
+              setIssueName(e.target.value); // Update state with the new value
+            }}
             onBlur={formik.handleBlur}
             value={formik.values.issueName}
           />
@@ -117,53 +110,30 @@ const CreateTaskDialog = (props: Props) => {
             <div className="text-error text-xs">{formik.errors.issueName}</div>
           ) : null}
 
-          <TextArea
-            id="issueDescription"
-            name="issueDescription"
-            placeholder="Write a description, a task brief, or collect ideas..."
-            variant="unstyled"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.issueDescription}
+          <Editor
+            editorState={issueDescription}
+            setEditorState={setIssueDescription}
           />
-          {formik.touched.issueDescription && formik.errors.issueDescription ? (
+          {formik.errors.issueDescription ? (
             <div className="text-error text-xs">{formik.errors.issueDescription}</div>
           ) : null}
 
           <div className="flex flex-row gap-2">
-            <AnimatedDropdown
-              trigger={
-                <Chip size="s" label={props.taskStatus} icon={<IconLineDashed size={14}/>}/>
-              }
-              dropdownItems={priorityDropdownItems}
-              itemAction={(value: string) => setPriority(value)}
-              />
+            {/* Example Priority Dropdown */}
             <AnimatedDropdown
               trigger={
                 <Chip size="s" label={priority ? priority : "Priority"} icon={<IconLineDashed size={14}/>}/>
               }
-              dropdownItems={priorityDropdownItems}
+              dropdownItems={[
+                { label: 'Low', value: 'LOW' },
+                { label: 'Medium', value: 'MEDIUM' },
+                { label: 'High', value: 'HIGH' }
+              ]}
               itemAction={(value: string) => setPriority(value)}
-              />
-
-              <AnimatedDropdown
-              trigger={
-                <Chip size="s" label="Due Date" icon={<IconTimeDuration0 size={14}/>}/>
-              }
-              dropdownItems={priorityDropdownItems}
-              itemAction={(value: string) => setPriority(value)}
-              />
-
-              <AnimatedDropdown
-              trigger={
-                <Chip size="s" label="Tags" icon={<IconTags size={14}/>}/>
-              }
-              dropdownItems={priorityDropdownItems}
-              itemAction={(value: string) => setPriority(value)}
-              />
-            
+            />
           </div>
         </div>
+
         <div className="flex flex-row gap-2 justify-end items-center">
           <Button intent="secondary" size="s" type="button" onClick={() => formik.resetForm()}>
             Cancel
