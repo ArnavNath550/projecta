@@ -24,6 +24,8 @@ type Props = {
 function Sidebar(props: Props) {
   const { data: session } = useSession();
 
+  const [switcherModalOpen, setSwitcherModalOpen] = React.useState(false);
+
   const params = useParams<{ id: number; }>()
 
   const sidebarTabs = [
@@ -87,6 +89,8 @@ function Sidebar(props: Props) {
            content={
             <ProjectSelectorDialog />
             }
+            isOpen={switcherModalOpen} 
+            setIsOpen={setSwitcherModalOpen}
            />
            <Button intent="unstyled" size="s">
             <IconSearch size={13} />

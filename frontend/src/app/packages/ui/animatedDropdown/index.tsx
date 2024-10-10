@@ -35,7 +35,7 @@ const AnimatedDropdown = (props: Props) => {
           <DropdownMenu.Portal>
             <div>
               <DropdownMenu.Content
-                className="bg-surface rounded-md"
+                className="bg-surface rounded-md border-[1px] border-surface-border DropdownMenuContent"
                 sideOffset={5}
                 align="start"
               >
@@ -48,12 +48,12 @@ const AnimatedDropdown = (props: Props) => {
                     onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
                   />
                 </div>
-                <div className="p-2">
+                <div className="p-1">
                   {/* Render filtered dropdownItems */}
                   {filteredItems.map((item) => (
                     <DropdownMenu.Item
                       key={item.value}
-                      className="group text-[13px] leading-none text-[#fff] rounded-[3px] cursor-pointer flex items-center h-[25px] p-4 pl-3 relative select-none outline-none rounded-md data-[disabled]:pointer-events-none data-[highlighted]:bg-surface-lighter cursor-normal data-[highlighted]:text-[#fff] hover:bg-surface-lighter p-2"
+                      className="group text-[13px] leading-none text-[#fff] rounded-[3px] cursor-pointer flex items-center h-[25px] p-3.5 relative select-none outline-none rounded-md data-[disabled]:pointer-events-none data-[highlighted]:bg-surface-lighter cursor-normal data-[highlighted]:text-[#fff] hover:bg-surface-lighter"
                       onClick={() => props.itemAction(item.label)} // Call itemAction when item is clicked
                     >
                       {item.label}

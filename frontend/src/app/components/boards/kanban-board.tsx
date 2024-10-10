@@ -4,6 +4,7 @@ import { Column } from "./kanban-column"; // Assuming you have these column comp
 import { API_ENDPOINT } from "@/app/services/api";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { supabase } from "@/app/api/db";
+import Workflows from "../issues/workflows";
 
 
 interface Task {
@@ -62,19 +63,24 @@ export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
 
   return (
     <div className="flex h-full w-full gap-5 overflow-scroll">
-        {taskStatuses.map((y, i) => {
-            return (
-                <Column
-                    key={y.issue_id}
-                    title={y}
-                    column={y}
-                    headingColor="text-neutral-500"
-                    cards={issues}
-                    setCards={setIssues}
-                    reloadIssues={fetchIssues}
-                />
-            )     
-      })}
+        
+      {issues.length > 0 ? (
+        taskStatuses.map((y, i) => {
+              return (
+                  <Column
+                      key={y}
+                      title={y}
+                      column={y}
+                      headingColor="text-neutral-500"
+                      cards={issues}
+                      setCards={setIssues}
+                      reloadIssues={fetchIssues}
+                  />
+              )     
+        })
+      ) : (
+        <Workflows initIssues={fetchIssues} />
+      )}
     </div>
   );
 };

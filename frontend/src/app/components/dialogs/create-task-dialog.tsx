@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import Button from '@/app/packages/ui/button';
 import { Input, TextArea } from '@/app/packages/ui/input';
 import { Chip } from '@/app/packages/ui/chip';
-import { IconCalendar, IconChevronDown, IconChevronRight, IconLineDashed, IconTags, IconTimeDuration0, IconUser, IconUserCircle, IconWifi2 } from '@tabler/icons-react';
+import { IconCalendar, IconChevronDown, IconChevronRight, IconLineDashed, IconTags, IconTimeDuration0, IconUser, IconUserCircle, IconWifi2, IconX } from '@tabler/icons-react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
@@ -16,6 +16,8 @@ import { useKeyPress } from '../../../../helpers';
 import { API_ENDPOINT } from '@/app/services/api';
 
 import Editor from '../editor';
+import AnimatedTagsDropdown from '@/app/packages/ui/animatedDropdown/animated-tags-dropdown';
+import CalendarDropdown from '@/app/packages/ui/calendarPicker';
 
 type Props = {
   taskStatus: string,
@@ -56,14 +58,10 @@ const CreateTaskDialog = (props: Props) => {
       const response = await axios.post(API_ENDPOINT + '/issues', {
         "issue_name": values.issueName,
         "issue_description": values.issueDescription,
-        "issue_status": "Open",
+        "issue_status": props.taskStatus,
         "issue_priority": values.issuePriority,
-        "issue_tags": {
-          "frontend": true,
-          "bug": true,
-          "urgent": true
-        },
-        "issue_identifier": "ISSUE-12345",
+        "issue_tags": selectedTags,
+        "issue_identifier": "ISSUE-"+issueId,
         "issue_id": issueId,
         "project_creator": session?.user.id,
         "project_id": params.id
@@ -87,6 +85,7 @@ const CreateTaskDialog = (props: Props) => {
 
   // tags
   const [tags, setTags] = React.useState<{ label: string, value: string }[]>([]);
+  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
   const [issueViewState, setIssueViewState] = React.useState<String>("ISSUE");
 
   interface Tag {
@@ -116,6 +115,17 @@ const CreateTaskDialog = (props: Props) => {
 
     fetchTags();
   }, []);
+
+  const addTag = (value) => {
+    if (selectedTags.indexOf(value) > -1) {
+        // If the tag exists, remove it
+        setSelectedTags(selectedTags.filter(tag => tag !== value));
+    } else {
+        // If the tag does not exist, add it
+        setSelectedTags([...selectedTags, value]);
+    }
+};
+
 
   return (
     <div className="w-[650px] h-full p-[15px]">
@@ -150,7 +160,18 @@ const CreateTaskDialog = (props: Props) => {
           {formik.errors.issueDescription ? (
             <div className="text-error text-xs">{formik.errors.issueDescription}</div>
           ) : null}
-
+          <div className="flex flex-row gap-2 items-center">
+            {selectedTags.length > 0 ?(
+              <div className="flex flex-row items-center gap-3 text-xs font-semiold text-on-surface">
+                Tags
+                {selectedTags.map((y) => {
+                  return <div className="animate-fade-in-left"><Chip size="s" label={y} icon={<IconX size={12} onClick={() => addTag(y)}/>} /></div>;
+                })}
+              </div>
+            ) : (
+              <div></div>
+            )}
+          </div>
           <div className="flex flex-row gap-2 items-center">
             <AnimatedDropdown
               trigger={
@@ -163,20 +184,22 @@ const CreateTaskDialog = (props: Props) => {
               ]}
               itemAction={(value: string) => setPriority(value.toLowerCase())}
             />
-            <AnimatedDropdown
+            <AnimatedTagsDropdown
               trigger={
-                <Chip size="base" label={priority ? priority : "Tags"} icon={<IconLineDashed size={14}/>}/>
+                <Chip size="base" label={`Tags`} icon={<IconLineDashed size={14}/>}/>
               }
               dropdownItems={tags}
-              itemAction={(value: string) => setPriority(value.toLowerCase())}
+              itemAction={(value: string) => addTag(value)}
             />
 
-            <Chip size="base" label={"Due Date"} icon={<IconCalendar size={14}/>}/>
+            <div className="relative">
+              <Chip size="base" label={"Due Date"} icon={<IconCalendar size={14}/>}/>
+            </div>
           </div>
         </div>
 
         <div className="flex flex-row gap-2 justify-end items-center">
-          <Button intent="secondary" size="s" type="button" onClick={() => formik.resetForm()}>
+          <Button intent="secondary" size="s" type="button" onClick={() => props.setCloseIssueDialog}>
             Cancel
           </Button>
           <TooltipButton

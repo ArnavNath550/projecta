@@ -78,8 +78,10 @@ html,body {
   user-select: none;
   font-family: "Instrument Sans", sans-serif!important;
   outline: none;
-  cursor: normal;
+  cursor: default!important;
 }
+
+button { cursor: default!important; }
 
 @keyframes fadeIn {
   from {
@@ -188,25 +190,11 @@ html,body {
 .DropdownMenuContent[data-side='top'] {
   animation-name: slideUp;
 }
-.DropdownMenuContent[data-side='bottom'] {
-  animation-name: slideDown;
-}
 
 @keyframes slideUp {
   from {
     opacity: 0;
     transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -312,4 +300,35 @@ html,body {
     transform: scale(20, 0.3);
     opacity: 0;
   }
+}
+
+
+/* 
+.glowing::before{
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  background: linear-gradient(45deg, #e8f74d, #ff6600d9, #00ff66, #13ff13, #ad27ad, #bd2681, #6512b9, #ff3300de, #5aabde);
+  background-size: 400%;
+  width: calc(100% + 5px);
+  height: calc(100% + 5px);
+  z-index: -1;
+  animation: glower 20s linear infinite;
+} */
+
+.DropdownMenuContent {
+	transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+	animation: scaleIn 0.1s ease-out;
+}
+
+@keyframes scaleIn {
+	from {
+		opacity: 0.5;
+		transform: scale(0.8);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
 }

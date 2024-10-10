@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { IconCalendar, IconPlus, IconTimeDuration0 } from "@tabler/icons-react";
+import { IconCalendar, IconPlus, IconTags, IconTimeDuration0 } from "@tabler/icons-react";
 import { Chip } from "@/app/packages/ui/chip";
 import AnimatedDialog from "@/app/packages/ui/animatedDialog";
 import Button from "@/app/packages/ui/button";
 import CreateTaskDialog from "../dialogs/create-task-dialog";
 import IssueDetailDialog from "../dialogs/issue-detail-dialog";
+
+import { format, isSameMinute } from 'date-fns';
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 interface Card {
   title: string;
@@ -28,12 +32,16 @@ interface DropIndicatorProps {
 }
 
 interface CardProps {
-  title: string;
-  id: string;
-  issue_description: string,
+  key: string;
+  issue_name: string;
+  issue_priority: string;
+  created_at: string; // Assume created_at is a string or Date
+  issue_description: string;
   issue_tags: [];
+  issue_id: string;
+  issue_status: string;
   column: string;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, card: Card) => void;
+  handleDragStart: (e: React.DragEvent, issue: any) => void;
 }
 
 export const Column: React.FC<ColumnProps> = ({
@@ -71,8 +79,10 @@ export const Column: React.FC<ColumnProps> = ({
       let cardToTransfer = copy.find((c) => c.issue_id === cardId);
       if (!cardToTransfer) return;
 
-      cardToTransfer = { ...cardToTransfer, column }; // Update the column of the dragged card
-  
+
+      cardToTransfer = { ...cardToTransfer, issue_status: column }; // Update the column of the dragged card
+      console.log(`thiscard`, cardToTransfer);
+
       // Filter out the card being transferred by its issue_id
       copy = copy.filter((c) => c.issue_id !== cardId);
   
@@ -159,7 +169,6 @@ export const Column: React.FC<ColumnProps> = ({
 
   return (
     <div className="w-[285px] shrink-0">
-        {/* {JSON.stringify(cards)} */}
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-medium text-sm ${headingColor}`}>{title}</h3>
         <div className="flex flex-row items-center justify-center gap-2">
@@ -194,43 +203,82 @@ export const Column: React.FC<ColumnProps> = ({
   );
 };
 
-const Card: React.FC<CardProps> = ({ key, issue_name, issue_priority, issue_description, issue_tags, issue_id, column, handleDragStart }) => {
-    const [id, setId] = React.useState(issue_id);    
+const Card: React.FC<CardProps> = ({
+  issue_name,
+  issue_priority,
+  created_at,
+  issue_description,
+  issue_tags,
+  issue_status,
+  issue_id,
+  column,
+  handleDragStart
+}) => {
+  const [id, setId] = React.useState(issue_id);
+  const [issueDetailDialogOpen, setIssueDetailDialogOpen] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    const createdAtDate = new Date(created_at);
+    const now = new Date();
+
+    // Check if created_at is in the same minute as current time
+    if (isSameMinute(createdAtDate, now)) {
+      setId('NOW');
+    }
+  }, [created_at]);
+
+  const params = useParams();
+
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
-      <AnimatedDialog 
-        trigger={<motion.div
-          layout
-          layoutId={id}
-          draggable="true"
-          onDragStart={(e) => handleDragStart(e, { issue_name, id, column })}
-        >
-          <div className="rounded border border-surface-border bg-surface p-2.5 flex items-start flex-col gap-1 hover:bg-[#23262b] text-left">
-          <div className="text-sm text-left">{issue_name}</div>
-          <div className="flex flex-row gap-2">
-              <div className="flex-row flex gap-1 items-center justify-center">
-                <div>
-                  <div className="rounded-full w-2 h-2 bg-[#ee8a39]"></div>
+      
+          <motion.div
+            layout
+            layoutId={id}
+            draggable="true"
+            onDragStart={(e) => handleDragStart(e, { issue_name, id, column })}
+            className="relative"
+          >
+            
+                <Link href={'/client/'+ params.id + '/issues/' + issue_id}>
+                <div className={`rounded border border-surface-border bg-surface p-2.5 flex items-start flex-col gap-1 hover:bg-[#23262b] text-left`}>
+              <div className="text-sm text-left">{issue_name}</div>
+              <div className="flex flex-row gap-2">
+                <div className="flex-row flex gap-1 items-center justify-center">
+                  <div>
+                    <div className="rounded-full w-2 h-2 bg-[#ee8a39]"></div>
+                  </div>
+                  <div className="text-sm font-normal text-on-surface">{issue_priority}</div>
                 </div>
-                <div className="text-sm font-normal text-on-surface">{issue_priority}</div>
+                <div className="flex-row flex gap-1 items-center justify-center">
+                  <div>
+                    <IconTimeDuration0 size={12} color="#fff" />
+                  </div>
+                  <div className="text-sm font-normal text-on-surface">
+                    {format(new Date(created_at), 'd MMM')}
+                  </div>
+                </div>
               </div>
               <div className="flex-row flex gap-1 items-center justify-center">
-                <div>
-                  <IconTimeDuration0 size={12} color="#fff" />
-                </div>
-                <div className="text-sm font-normal text-on-surface">15th Nov</div>
+                <Chip label="Add Tags" icon={<IconTags size={12} color="#fff" />} size="s"/>
+                {issue_tags.length > 0 ? (
+                  <div className="flex flex-row gap-1 items-center">
+                    {issue_tags.map((y) => {
+                      return (
+                        <Chip label={y} size="s" />
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div></div>
+                )}
               </div>
-          </div>
-          <div className="flex-row flex gap-1 items-center justify-center">
-                <Chip icon={<div className="rounded-full w-2 h-2 bg-[#ee394e]"></div>}
-                    size="s"
-                    label="Frontend" />
-              </div>
-              </div>
-        </motion.div>}
-        content={<IssueDetailDialog issueTitle={issue_name} issueId={issue_id} issueDescription={issue_description}/>}
-      />
+            </div>
+
+                </Link>
+          </motion.div>
+
     </>
   );
 };
