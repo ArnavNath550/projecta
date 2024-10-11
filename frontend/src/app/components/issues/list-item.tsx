@@ -17,8 +17,8 @@ type Props = {
 const ListItem: React.FC = (props: Props) => {
     const [priority, setPriority] = React.useState(props.data.issue_priority);
 
-    const handleUpdateIssuePriority = async() => {
-        await updateIssuePriority(props.data.issue_id, priority);
+    const handleUpdateIssuePriority = () => {
+        updateIssuePriority(props.data.issue_id, priority);
         props.setIssueUpdated(true);
     }
 
@@ -26,8 +26,10 @@ const ListItem: React.FC = (props: Props) => {
         handleUpdateIssuePriority();
     }, [priority]);
 
+    //  href={`issues/`+props.data.issue_id+'/'}
+
     return (
-        <Link className="p-3 pt-2.5 pb-2.5 flex flex-row items-center justify-between border-b-[1px] border-surface-border hover:bg-[#030715] transition-all" href={`issues/`+props.data.issue_id+'/'}>
+        <div className="p-3 pt-2.5 pb-2.5 flex flex-row items-center justify-between border-b-[1px] border-surface-border hover:bg-[#030715] transition-all">
             <div className="flex flex-row items-center gap-2">
                 <div className="flex flex-row gap-2 items-center">
                     {/* <div className="text-sm text-on-surface">
@@ -79,7 +81,7 @@ const ListItem: React.FC = (props: Props) => {
                 </span>
             </div>
 
-        </Link>
+        </div>
     )
 }
 
