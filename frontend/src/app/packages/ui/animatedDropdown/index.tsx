@@ -4,6 +4,7 @@ import { MiniInput } from '../input';
 import { useTransition, animated } from 'react-spring';
 
 type DropdownItem = {
+  icon?: any,
   label: string;
   value: string;
 };
@@ -53,9 +54,10 @@ const AnimatedDropdown = (props: Props) => {
                   {filteredItems.map((item) => (
                     <DropdownMenu.Item
                       key={item.value}
-                      className="group text-[13px] leading-none text-[#fff] rounded-[3px] cursor-pointer flex items-center h-[25px] p-3.5 relative select-none outline-none rounded-md data-[disabled]:pointer-events-none data-[highlighted]:bg-surface-lighter cursor-normal data-[highlighted]:text-[#fff] hover:bg-surface-lighter"
-                      onClick={() => props.itemAction(item.label)} // Call itemAction when item is clicked
+                      className="group text-[13px] leading-none text-[#fff] rounded-[3px] cursor-pointer flex flex-row gap-2 items-center h-[25px] p-3.5 relative select-none outline-none rounded-md data-[disabled]:pointer-events-none data-[highlighted]:bg-surface-lighter cursor-normal data-[highlighted]:text-[#fff] hover:bg-surface-lighter"
+                      onClick={() => props.itemAction(item.value)} // Call itemAction when item is clicked
                     >
+                      {item.icon ? item.icon : <></>}
                       {item.label}
                     </DropdownMenu.Item>
                   ))}

@@ -206,7 +206,7 @@ const CreateTaskDialog = (props: Props) => {
             tooltipText=''
             keyboardShortcut={['Ctrl', 'Enter']}
             buttonContent={<Button intent="primary" size="s" type="submit" disabled={formik.isSubmitting}>
-            Create Task
+            Create Issue
           </Button>}
           />
         </div>

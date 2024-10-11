@@ -1,5 +1,6 @@
 'use client'
 import AppContent from '@/app/components/app-content'
+import BacklogAppContent from '@/app/components/app-content/backlog-app-content'
 import IssueAppContent from '@/app/components/app-content/issue-app-content'
 import FullPageLoader from '@/app/components/loaders/full-page-loader'
 import Sidebar from '@/app/components/sidebar'
@@ -10,7 +11,7 @@ import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-function TasksPage() {
+function BacklogPage() {
   const [appContent, setAppContent] = React.useState(<span>app content</span>);
   const params = useParams<{ id: number; }>()
   const id = params.id;
@@ -52,11 +53,11 @@ function TasksPage() {
       ) : (
         <div className="w-full h-full flex flex-row">
       <Sidebar projectData={projectData} projectDataLoading={projectDataLoading} sidebarProjectItems={sidebarProjectItems} setAppContent={setAppContent} />
-      <AppContent projectData={projectData} projectDataLoading={projectDataLoading} content={<span>backlogs</span>}/>
+      <AppContent projectData={projectData} projectDataLoading={projectDataLoading} content={<BacklogAppContent />}/>
       </div>
       )}
     </>
   )
 }
 
-export default TasksPage
+export default BacklogPage

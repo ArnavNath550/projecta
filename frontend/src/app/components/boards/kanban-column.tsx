@@ -258,6 +258,7 @@ const Card: React.FC<CardProps> = ({
                   <div className="text-sm font-normal text-on-surface">
                     {format(new Date(created_at), 'd MMM')}
                   </div>
+
                 </div>
               </div>
               <div className="flex-row flex gap-1 items-center justify-center">

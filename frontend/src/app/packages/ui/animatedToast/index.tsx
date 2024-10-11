@@ -23,7 +23,7 @@ const AnimatedToast: React.FC<AnimatedToastProps> = ({ title, description, open,
       <ToastPrimitive.Root
         open={open}
         onOpenChange={setOpen}
-        className="bg-on-surface-darker border-[1px] border-surface-border rounded-md text-white p-3 drop-shadow-md rounded-lg shadow-lg flex items-center space-x-4 max-w-xs"
+        className="bg-on-surface-darker border-[1px] border-surface-border rounded-md text-white p-3 drop-shadow-md rounded-lg shadow-lg flex items-center space-x-4 max-w-xs animated-fade-up"
       >
         <div className="flex flex-col gap-1">
           <ToastPrimitive.Title className="font-medium font-sm">{title}</ToastPrimitive.Title>

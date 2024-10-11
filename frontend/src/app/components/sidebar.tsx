@@ -98,7 +98,7 @@ function Sidebar(props: Props) {
           </div>
            
            <div className="flex flex-col gap-1 pl-2">
-            <Link href={`/client/${params.id}/tasks`}>
+            <Link href={`/client/${params.id}/issues`}>
               <SidebarTab 
                 tabIcon={<IconStack3 size={20}  className="text-on-surface" strokeWidth={1} />}
                 tabName="Issues"
