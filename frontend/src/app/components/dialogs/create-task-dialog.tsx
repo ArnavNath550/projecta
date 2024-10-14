@@ -9,7 +9,7 @@ import { IconCalendar, IconChevronDown, IconChevronRight, IconLineDashed, IconTa
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { generateObjectId } from '@/app/helpers';
+import { generateObjectId, ISSUE_PRIORITY_LIST } from '@/app/helpers';
 import AnimatedDropdown from '@/app/packages/ui/animatedDropdown';
 import TooltipButton from '@/app/packages/ui/animatedTooltip';
 import { useKeyPress } from '../../../../helpers';
@@ -18,6 +18,11 @@ import { API_ENDPOINT } from '@/app/services/api';
 import Editor from '../editor';
 import AnimatedTagsDropdown from '@/app/packages/ui/animatedDropdown/animated-tags-dropdown';
 import CalendarDropdown from '@/app/packages/ui/calendarPicker';
+import AnimatedDialog from '@/app/packages/ui/animatedDialog';
+import SetIssueDueDateDialog from './issues/create-issue/set-issue-due-date-dialog';
+import TagSelectorDialog from './list-content/tag-selector-dialog';
+import CreateTagDialog from './create-tag-dialog';
+import { format, formatDate } from 'date-fns';
 
 type Props = {
   taskStatus: string,
@@ -30,6 +35,10 @@ const CreateTaskDialog = (props: Props) => {
   const [priority, setPriority] = React.useState("");
   const [issueName, setIssueName] = React.useState("");
   const [issueDescription, setIssueDescription] = React.useState("");
+
+  const [isIssueDueDateIsOpen, setIssueDueDateIsOpen] = React.useState(false);
+  const [selectedDueDate, setSelectedDueDate] = React.useState("");
+  const [isIssueTagsOpen, setIsIssueTagsOpen] = React.useState(false);
 
   const params = useParams();
   
@@ -44,7 +53,7 @@ const CreateTaskDialog = (props: Props) => {
     validationSchema: Yup.object({
       issueName: Yup.string().required('Issue Name is required'),
       issueDescription: Yup.string(),
-      issuePriority: Yup.string().oneOf(['low', 'medium', 'high'], 'Invalid priority').required(),
+      issuePriority: Yup.string().oneOf(['LOW', 'MEDIUM', 'HIGH', 'URGENT'], 'Invalid priority').required(),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       await createTask(values, setSubmitting, resetForm, props.reloadIssues);
@@ -59,8 +68,9 @@ const CreateTaskDialog = (props: Props) => {
         "issue_name": values.issueName,
         "issue_description": values.issueDescription,
         "issue_status": props.taskStatus,
+        "issue_due_date": selectedDueDate,
         "issue_priority": values.issuePriority,
-        "issue_tags": selectedTags,
+        "issue_tags": issueSelectedTags,
         "issue_identifier": "ISSUE-"+issueId,
         "issue_id": issueId,
         "project_creator": session?.user.id,
@@ -85,7 +95,7 @@ const CreateTaskDialog = (props: Props) => {
 
   // tags
   const [tags, setTags] = React.useState<{ label: string, value: string }[]>([]);
-  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
+  const [issueSelectedTags, setIssueSelectedTags] = React.useState([]);
   const [issueViewState, setIssueViewState] = React.useState<String>("ISSUE");
 
   interface Tag {
@@ -103,11 +113,7 @@ const CreateTaskDialog = (props: Props) => {
     const fetchTags = async () => {
       try {
         const response = await axios.get<{ data: Tag[] }>(API_ENDPOINT + `/tags/project/${params.id}`);
-        const tagItems = response.data.data.map(tag => ({
-          label: tag.tag_name,
-          value: tag.tag_name.toUpperCase(), // Adjust value based on your logic
-        }));
-        setTags(tagItems);
+        setTags(response.data.data);
       } catch (error) {
         console.error('Error fetching tags:', error);
       }
@@ -116,16 +122,6 @@ const CreateTaskDialog = (props: Props) => {
     fetchTags();
   }, []);
 
-  const addTag = (value) => {
-    if (selectedTags.indexOf(value) > -1) {
-        // If the tag exists, remove it
-        setSelectedTags(selectedTags.filter(tag => tag !== value));
-    } else {
-        // If the tag does not exist, add it
-        setSelectedTags([...selectedTags, value]);
-    }
-};
-
 
   return (
     <div className="w-[650px] h-full p-[15px]">
@@ -133,14 +129,14 @@ const CreateTaskDialog = (props: Props) => {
         <div className="flex flex-row gap-2 items-center">
           <Chip label="Project.A" size="s" />
           <IconChevronRight size={12} color="#fff" />
-          <span className="font-normal text-xs">New Issue</span>
+          <span className="font-normal text-xs">{props.taskStatus == "ISBACK" ? "Backlog" : "New Issue"}</span>
         </div>
         <div className="flex flex-col gap-2 pt-3 pb-3">
           {/* Update Issue Name input field to reflect state */}
           <Input
             id="issueName"
             name="issueName"
-            placeholder="Issue Name"
+            placeholder={props.taskStatus == "ISBACK" ? "Backlog Name" : "Issue Name"}
             variant="unstyled"
             onChange={(e) => {
               formik.handleChange(e); // Formik handle change
@@ -161,11 +157,11 @@ const CreateTaskDialog = (props: Props) => {
             <div className="text-error text-xs">{formik.errors.issueDescription}</div>
           ) : null}
           <div className="flex flex-row gap-2 items-center">
-            {selectedTags.length > 0 ?(
+            {issueSelectedTags.length > 0 ?(
               <div className="flex flex-row items-center gap-3 text-xs font-semiold text-on-surface">
                 Tags
-                {selectedTags.map((y) => {
-                  return <div className="animate-fade-in-left"><Chip size="s" label={y} icon={<IconX size={12} onClick={() => addTag(y)}/>} /></div>;
+                {issueSelectedTags.map((y) => {
+                  return <div className="animate-fade-in-left"><Chip size="s" label={y.tag_name} icon={<IconX size={12} />} /></div>;
                 })}
               </div>
             ) : (
@@ -177,23 +173,26 @@ const CreateTaskDialog = (props: Props) => {
               trigger={
                 <Chip size="base" label={priority ? priority : "Priority"} icon={<IconLineDashed size={14}/>}/>
               }
-              dropdownItems={[
-                { label: 'Low', value: 'LOW' },
-                { label: 'Medium', value: 'MEDIUM' },
-                { label: 'High', value: 'HIGH' }
-              ]}
-              itemAction={(value: string) => setPriority(value.toLowerCase())}
+              dropdownItems={ISSUE_PRIORITY_LIST}
+              itemAction={(value: string) => setPriority(value)}
             />
-            <AnimatedTagsDropdown
-              trigger={
-                <Chip size="base" label={`Tags`} icon={<IconLineDashed size={14}/>}/>
-              }
-              dropdownItems={tags}
-              itemAction={(value: string) => addTag(value)}
-            />
-
             <div className="relative">
-              <Chip size="base" label={"Due Date"} icon={<IconCalendar size={14}/>}/>
+              <AnimatedDialog
+                trigger={<Chip size="base" label={`Tags`} icon={<IconLineDashed size={14}/>}/>}
+                content={tags.length > 0 ? <TagSelectorDialog list={tags} setIssueSelectedTags={(selectedTags: Tag[]) => setIssueSelectedTags(selectedTags)} setCloseTagSelectorDialog={setIsIssueTagsOpen}/> : <CreateTagDialog />}
+                isOpen={isIssueTagsOpen}
+                setIsOpen={setIsIssueTagsOpen}
+              />
+            </div>
+            <div className="relative">
+              <AnimatedDialog 
+                isOpen={isIssueDueDateIsOpen}
+                setIsOpen={setIssueDueDateIsOpen}
+                trigger={<Chip size="base" label={selectedDueDate ? format(new Date(selectedDueDate), 'd MMM') : "Due Date"} icon={<IconCalendar size={14}/>}/>}
+                content={
+                  <SetIssueDueDateDialog selectedDueDate={selectedDueDate} setSelectedDueDate={setSelectedDueDate} onSetIssueDueDateDialogClosed={setIssueDueDateIsOpen}/>
+                }
+              />
             </div>
           </div>
         </div>

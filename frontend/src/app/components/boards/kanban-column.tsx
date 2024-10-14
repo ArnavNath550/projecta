@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { IconCalendar, IconPlus, IconTags, IconTimeDuration0 } from "@tabler/icons-react";
+import { IconCalendar, IconCalendarClock, IconPlus, IconTags, IconTimeDuration0 } from "@tabler/icons-react";
 import { Chip } from "@/app/packages/ui/chip";
 import AnimatedDialog from "@/app/packages/ui/animatedDialog";
 import Button from "@/app/packages/ui/button";
 import CreateTaskDialog from "../dialogs/create-task-dialog";
 import IssueDetailDialog from "../dialogs/issue-detail-dialog";
 
-import { format, isSameMinute } from 'date-fns';
+import { format, formatDate, formatDistance, isSameMinute, subDays } from 'date-fns';
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { formatString, getPriorityIcon, ISSUE_PRIORITY_LIST } from "@/app/helpers";
+import AnimatedDropdown from "@/app/packages/ui/animatedDropdown";
+import { updateIssuePriority } from "@/app/api/actions/issue-actions";
+import TooltipButton from "@/app/packages/ui/animatedTooltip";
 
 interface Card {
   title: string;
@@ -40,6 +44,7 @@ interface CardProps {
   issue_tags: [];
   issue_id: string;
   issue_status: string;
+  issue_due_date?: Date;
   column: string;
   handleDragStart: (e: React.DragEvent, issue: any) => void;
 }
@@ -168,7 +173,7 @@ export const Column: React.FC<ColumnProps> = ({
   const filteredCards = cards.filter((c) => c.issue_status === column);
 
   return (
-    <div className="w-[285px] shrink-0">
+    <div className="w-[310px] shrink-0">
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-medium text-sm ${headingColor}`}>{title}</h3>
         <div className="flex flex-row items-center justify-center gap-2">
@@ -191,7 +196,7 @@ export const Column: React.FC<ColumnProps> = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         className={`h-full w-full transition-colors ${
-          active ? "bg-neutral-800/50" : "bg-neutral-800/0"
+          active ? "bg-on-surface-darker" : "bg-background"
         }`}
       >
         {filteredCards.map((c, i) => {
@@ -210,12 +215,14 @@ const Card: React.FC<CardProps> = ({
   issue_description,
   issue_tags,
   issue_status,
+  issue_due_date,
   issue_id,
   column,
   handleDragStart
 }) => {
   const [id, setId] = React.useState(issue_id);
   const [issueDetailDialogOpen, setIssueDetailDialogOpen] = useState<boolean>(false);
+  const [priority, setPriority] = React.useState(issue_priority);
 
   React.useEffect(() => {
     const createdAtDate = new Date(created_at);
@@ -229,6 +236,11 @@ const Card: React.FC<CardProps> = ({
 
   const params = useParams();
 
+  const handlePriorityChange = (priority: string) => {
+    const response = updateIssuePriority(issue_id, priority);
+    setPriority(priority);
+  }
+
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
@@ -240,34 +252,43 @@ const Card: React.FC<CardProps> = ({
             onDragStart={(e) => handleDragStart(e, { issue_name, id, column })}
             className="relative"
           >
-            
-                <Link href={'/client/'+ params.id + '/issues/' + issue_id}>
+             {/* onClick={() => window.location.href = '/client/'+ params.id + '/issues/' + issue_id} */}
+                <div>
                 <div className={`rounded border border-surface-border bg-surface p-2.5 flex items-start flex-col gap-1 hover:bg-[#23262b] text-left`}>
+              <div className="flex flex-row justify-between w-full">
               <div className="text-sm text-left">{issue_name}</div>
-              <div className="flex flex-row gap-2">
-                <div className="flex-row flex gap-1 items-center justify-center">
-                  <div>
-                    <div className="rounded-full w-2 h-2 bg-[#ee8a39]"></div>
+              <AnimatedDropdown
+                  trigger={
+                    <TooltipButton
+                      buttonContent={<div className="flex-row flex">
+                        <div>
+                          {getPriorityIcon(issue_priority)}
+                        </div>
+                      </div>}
+                      tooltipText={issue_priority}
+                      />
+                  }
+                  dropdownItems={ISSUE_PRIORITY_LIST}
+                  itemAction={(value: string) => handlePriorityChange(value)}
+                />
+              </div>
+              <div className="flex flex-row gap-1">
+                {issue_due_date ? (
+                  <div className="flex flex-row gap-1 items-center text-on-surface text-sm">
+                    <IconCalendarClock size={15} color="#fff"/>
+                    {format(new Date(issue_due_date), 'd MMM')}
                   </div>
-                  <div className="text-sm font-normal text-on-surface">{issue_priority}</div>
-                </div>
-                <div className="flex-row flex gap-1 items-center justify-center">
-                  <div>
-                    <IconTimeDuration0 size={12} color="#fff" />
-                  </div>
-                  <div className="text-sm font-normal text-on-surface">
-                    {format(new Date(created_at), 'd MMM')}
-                  </div>
-
-                </div>
+                ) : (
+                  <></>
+                )}
               </div>
               <div className="flex-row flex gap-1 items-center justify-center">
-                <Chip label="Add Tags" icon={<IconTags size={12} color="#fff" />} size="s"/>
+                <Chip label="Add Tags" icon={<IconTags size={15} color="#fff" />} size="s"/>
                 {issue_tags.length > 0 ? (
                   <div className="flex flex-row gap-1 items-center">
                     {issue_tags.map((y) => {
                       return (
-                        <Chip label={y} size="s" />
+                        <Chip label={y.tag_name} size="s" icon={<div className={`w-[8px] h-[8px] rounded-full bg-[${y.tag_colour}]`}></div>} />
                       )
                     })}
                   </div>
@@ -277,7 +298,7 @@ const Card: React.FC<CardProps> = ({
               </div>
             </div>
 
-                </Link>
+                </div>
           </motion.div>
 
     </>
@@ -289,7 +310,7 @@ const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, column }) => {
     <div
       data-before={beforeId || "-1"}
       data-column={column}
-      className="my-0.5 h-[5px] w-full bg-violet-400 opacity-0 active:bg-surface-lighter"
+      className="my-0.5 h-[5px] w-full bg-surface opacity-0 active:bg-surface-lighter"
     />
   );
 };

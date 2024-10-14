@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { IconX } from '@tabler/icons-react';
+import Button from '../button';
 
 interface AnimatedToastProps {
   title: string;
@@ -23,7 +24,7 @@ const AnimatedToast: React.FC<AnimatedToastProps> = ({ title, description, open,
       <ToastPrimitive.Root
         open={open}
         onOpenChange={setOpen}
-        className="bg-on-surface-darker border-[1px] border-surface-border rounded-md text-white p-3 drop-shadow-md rounded-lg shadow-lg flex items-center space-x-4 max-w-xs animated-fade-up"
+        className="backdrop-blur-sm bg-surface/30 border-[1px] border-surface-border rounded-md text-white p-3 drop-shadow-md shadow-lg flex items-center space-x-4 max-w-xs animate-fade-up pl-5 pr-5"
       >
         <div className="flex flex-col gap-1">
           <ToastPrimitive.Title className="font-medium font-sm">{title}</ToastPrimitive.Title>

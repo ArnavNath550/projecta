@@ -5,6 +5,10 @@ import { API_ENDPOINT } from "@/app/services/api";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { supabase } from "@/app/api/db";
 import Workflows from "../issues/workflows";
+import EmptyState from "@/app/packages/ui/emptyStates";
+import AnimatedDialog from "@/app/packages/ui/animatedDialog";
+import Button from "@/app/packages/ui/button";
+import CreateTaskDialog from "../dialogs/create-task-dialog";
 
 
 interface Task {
@@ -18,6 +22,8 @@ interface Task {
 export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
   const [issues, setIssues] = useState([]);
   const [taskStatuses, setTaskStatuses] = useState([]);
+
+  const [issueDialogOpen, setIssueDialogOpen] = useState(false);
 
   // Fetch issues and taskStatuses when the component mounts
   const fetchIssues = async () => {
@@ -62,10 +68,34 @@ export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
   }, [issues]);
 
   return (
+    <>
+    {issues.length == 0 ? (
+        <EmptyState
+      headingText='Create your first issue issue'
+      subHeadingText="Track your project's issues right here"
+      emptyStateButton={
+          <AnimatedDialog
+          trigger={
+              <Button intent="primary" size="base">
+                  Create Issue
+              </Button>
+          }
+          content={
+              <CreateTaskDialog
+                  taskStatus="Todo"
+                  reloadIssues={fetchIssues}
+                  setCloseIssueDialog={() => setIssueDialogOpen}
+              />
+          }  
+          
+          isOpen={issueDialogOpen}
+          setIsOpen={setIssueDialogOpen}
+          />
+      }
+  />
+    ) : (
     <div className="flex h-full w-full gap-5 overflow-scroll">
-        
-      {issues.length > 0 ? (
-        taskStatuses.map((y, i) => {
+        {taskStatuses.map((y, i) => {
               return (
                   <Column
                       key={y}
@@ -77,11 +107,10 @@ export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
                       reloadIssues={fetchIssues}
                   />
               )     
-        })
-      ) : (
-        <Workflows initIssues={fetchIssues} />
-      )}
+        })}
     </div>
+    )}  
+    </>
   );
 };
 

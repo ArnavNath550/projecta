@@ -4,14 +4,15 @@ import AnimatedDropdown from '@/app/packages/ui/animatedDropdown';
 import TooltipButton from '@/app/packages/ui/animatedTooltip';
 import Button from '@/app/packages/ui/button';
 import { Chip } from '@/app/packages/ui/chip';
-import { IconCircleDashed, IconLineDashed, IconPlus } from '@tabler/icons-react';
+import { IconCircleDashed, IconLineDashed, IconPlus, IconTag } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import * as React from 'react'
 
 type Props = {
     data: [],
-    setIssueUpdated: () => void
+    setIssueUpdated: () => void,
+    isDragging: any
 }
 
 const ListItem: React.FC = (props: Props) => {
@@ -19,7 +20,7 @@ const ListItem: React.FC = (props: Props) => {
 
     const handleUpdateIssuePriority = () => {
         updateIssuePriority(props.data.issue_id, priority);
-        props.setIssueUpdated(true);
+        // props.setIssueUpdated(true);
     }
 
     React.useEffect(() => {
@@ -29,7 +30,7 @@ const ListItem: React.FC = (props: Props) => {
     //  href={`issues/`+props.data.issue_id+'/'}
 
     return (
-        <div className="p-3 pt-2.5 pb-2.5 flex flex-row items-center justify-between border-b-[1px] border-surface-border hover:bg-[#030715] transition-all">
+        <div className={`p-3 pt-2.5 pb-2.5 flex flex-row items-center justify-between border-b-[1px] bg-background border-surface-border hover:bg-[#030715] transition-all ${props.isDragging ? "border-[1px] rounded-md drop-shadow-md scale-95" : ""}`}>
             <div className="flex flex-row items-center gap-2">
                 <div className="flex flex-row gap-2 items-center">
                     {/* <div className="text-sm text-on-surface">
@@ -67,7 +68,10 @@ const ListItem: React.FC = (props: Props) => {
                     <TooltipButton
                         buttonContent={
                             <Button intent="unstyled" size="s">
-                                <IconPlus size={12} color="#fff" />
+                                <div className="flex flex-row gap-2 items-center">
+                                    <IconTag size={12} color="#fff" />
+                                    {props.data.issue_tags.length == 0 ? " Add Tags" : ""}
+                                </div>
                             </Button>
                         }
                         tooltipText="Add Tag"

@@ -3,6 +3,10 @@ import React from 'react'
 import { KanbanBoard } from '../boards/kanban-board';
 import { useParams } from 'next/navigation';
 import Workflows from '../issues/workflows';
+import EmptyState from '@/app/packages/ui/emptyStates';
+import AnimatedDialog from '@/app/packages/ui/animatedDialog';
+import Button from '@/app/packages/ui/button';
+import CreateTaskDialog from '../dialogs/create-task-dialog';
 
 function IssueAppContent() {
   const params = useParams<{ id: number; }>()

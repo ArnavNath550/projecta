@@ -7,6 +7,7 @@ import { createProject } from './controllers/project.controller';
 import projectRouter from './routes/project.route';
 import tagRouter from './routes/tag.route';
 import issueRouter from './routes/issue.route';
+import workflowRouter from './routes/workflow.route';
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.post('/api/auth/login', loginOrSignup);
 app.use('/api', projectRouter);
 app.use('/api', tagRouter);
 app.use('/api', issueRouter);
+app.use('/api', workflowRouter);
 
 app.listen(8080, () => {
   console.log('Server is running on port 8080');

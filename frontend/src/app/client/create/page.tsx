@@ -76,7 +76,7 @@ const CreateProject = () => {
         // console.log('All tasks added successfully');
         
         // Redirect to project page
-         window.location.href = "/client/" + projectId + "/";
+         window.location.href = "/client/" + projectId + "/issues";
         console.log(response);
   
         // Reset form

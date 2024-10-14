@@ -1,20 +1,28 @@
-import React from 'react'
-import Button from '../button'
+import React from 'react';
+import Button from '../button';
 
-function EmptyState() {
+type Props = {
+  headingText: string,
+  subHeadingText: string,
+  emptyStateButton: React.ReactElement,
+};
+
+function EmptyState(props: Props) {
   return (
-    <div className="flex flex-col gap-4 text-center items-center justify-center w-[500px] m-auto">
-        <div className="flex flex-col gap-2">
-            <div className="text-3xl font-medium">Let's create your Project's Layers</div>
-            <div className="text-sm text-on-surface">Split up your project into different layers, eg. Frontend, Backend, Mobile, Server. Manage issues/backlogs between Layers</div>
+    <div className="flex flex-col gap-5 text-center items-center justify-center w-[500px] m-auto animate-fade-in">
+      <div className="flex flex-col gap-2">
+        <div className="text-3xl font-medium animate-fade-in">
+          {props.headingText}
         </div>
-        <div>
-            <Button intent="primary" size="base">
-                Create Layer
-            </Button>
+        <div className="text-sm text-on-surface animate-fade-in delay-200">
+          {props.subHeadingText}
         </div>
+      </div>
+      <div>
+        {props.emptyStateButton}
+      </div>
     </div>
-  )
+  );
 }
 
-export default EmptyState
+export default EmptyState;

@@ -22,7 +22,7 @@ const AnimatedDropdown = (props: Props) => {
 
   // Filter dropdownItems based on searchQuery
   const filteredItems = props.dropdownItems.filter(item =>
-    item.label.toLowerCase().includes(searchQuery.toLowerCase())
+    item.label.includes(searchQuery)
   );
 
   return (
@@ -36,7 +36,7 @@ const AnimatedDropdown = (props: Props) => {
           <DropdownMenu.Portal>
             <div>
               <DropdownMenu.Content
-                className="bg-surface rounded-md border-[1px] border-surface-border DropdownMenuContent"
+                className="backdrop-blur-sm bg-background/50 rounded-md border-[1px] border-surface-border DropdownMenuContent"
                 sideOffset={5}
                 align="start"
               >

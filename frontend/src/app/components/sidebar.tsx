@@ -55,9 +55,8 @@ function Sidebar(props: Props) {
       'projectName': 'Ramp',
     },
   ];  
-
   return (
-    <div className="w-[275px] h-full p-3.5 flex flex-col gap-2 animate-fade-in bg-background border-r-[1px] border-surface-border">
+    <div className="w-[275px] h-full p-3.5 flex flex-col gap-2 animate-fade-in bg-navbar-gradient border-r-[1px] border-surface-border">
         <SidebarUserTab 
           image={session?.user.image}
           userName={session?.user.name}
@@ -77,7 +76,7 @@ function Sidebar(props: Props) {
             </Link>
         </div>
         {props.projectDataLoading == false  ?(
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 animate-fade-up">
           <div className="flex flex-row justify-between gap-1">
           <AnimatedDialog
            trigger={
@@ -106,10 +105,12 @@ function Sidebar(props: Props) {
             </Link>
 
             <Link href={`/client/${params.id}/backlog`}>
-              <SidebarTab 
-                tabIcon={<IconCircle size={20}  className="text-on-surface" strokeWidth={1} />}
-                tabName="Backlog"
-              />
+              {/* <div onDrop={backlogDrop}> */}
+                <SidebarTab 
+                  tabIcon={<IconCircle size={20}  className="text-on-surface" strokeWidth={1} />}
+                  tabName="Backlog"
+                />
+              {/* </div> */}
             </Link>
 
             <Link href={`/client/${params.id}/layers`}>

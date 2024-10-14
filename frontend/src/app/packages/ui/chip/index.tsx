@@ -9,9 +9,9 @@ interface ChipProps {
 }
 
 const sizeClasses = {
-  s: 'text-[11px] p-1.5',
+  s: 'text-[11px] p-2',
   base: 'text-[12px] p-3',
-  l: 'text-md px-4 py-2',
+  l: 'text-md px-4 py-4',
 };
 
 export const Chip: React.FC<ChipProps> = ({

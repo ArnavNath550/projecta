@@ -137,7 +137,7 @@ const config: Config = {
       "glass-gradient":
         "linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 100%)",
       "navbar-gradient": 
-        "linear-gradient(45deg, #202028, #15151c)",
+        "linear-gradient(45deg, #070709, transparent)",
       "workflow-gradient":
         "linear-gradient(130deg, #361e013b, transparent)"
     },
