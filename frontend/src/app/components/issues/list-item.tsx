@@ -77,7 +77,7 @@ const ListItem: React.FC = (props: Props) => {
                         tooltipText="Add Tag"
                     />
                     {props.data.issue_tags.map((y) => {
-                        return <Chip label={y} />;
+                        return <Chip label={y.tag_name} size="s" icon={<div className={`w-[8px] h-[8px] rounded-full bg-[${y.tag_colour}]`}></div>} />;
                     })}
                 </div>
                 <span className="text-sm text-on-surface">

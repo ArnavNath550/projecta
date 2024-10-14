@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { IconCalendar, IconCalendarClock, IconPlus, IconTags, IconTimeDuration0 } from "@tabler/icons-react";
+import { IconCalendar, IconCalendarClock, IconHash, IconPlus, IconTags, IconTimeDuration0 } from "@tabler/icons-react";
 import { Chip } from "@/app/packages/ui/chip";
 import AnimatedDialog from "@/app/packages/ui/animatedDialog";
 import Button from "@/app/packages/ui/button";
@@ -272,7 +272,7 @@ const Card: React.FC<CardProps> = ({
                   itemAction={(value: string) => handlePriorityChange(value)}
                 />
               </div>
-              <div className="flex flex-row gap-1">
+              <div className="flex flex-row gap-2">
                 {issue_due_date ? (
                   <div className="flex flex-row gap-1 items-center text-on-surface text-sm">
                     <IconCalendarClock size={15} color="#fff"/>
@@ -281,6 +281,9 @@ const Card: React.FC<CardProps> = ({
                 ) : (
                   <></>
                 )}
+                <Button intent="secondary" size="xs">
+                  <IconHash size={12} color="#fff" />
+                </Button>
               </div>
               <div className="flex-row flex gap-1 items-center justify-center">
                 <Chip label="Add Tags" icon={<IconTags size={15} color="#fff" />} size="s"/>
