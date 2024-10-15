@@ -23,7 +23,7 @@ export const Chip: React.FC<ChipProps> = ({
 }) => {
   return (
     <div
-      className={`inline-flex items-center cursor-default gap-1 hover:drop-shadow-md rounded-md hover:bg-[#18191d] border-[1px] border-surface-border text-gray-800 ${sizeClasses[size]} ${className} transition-colors h-[23px]`}
+      className={`inline-flex items-center cursor-default gap-1 hover:drop-shadow-md rounded-md bg-[#18191e] hover:bg-[#23252c] border-[1px] border-surface-border text-gray-800 ${sizeClasses[size]} ${className} transition-colors h-[23px]`}
       role="button"
       aria-label={label}
       onClick={onClick}

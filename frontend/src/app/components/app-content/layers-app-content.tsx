@@ -13,6 +13,7 @@ const [isCreateLayerModalOpen, setCreateLayerModalOpen] = React.useState(false);
   return (
     <div className="w-full h-full flex items-center justify-center">
         <EmptyState 
+            image="/images/layers-illustration.svg"
             headingText="Let's create your Project's Layers"
             subHeadingText='Split up your project into different layers, eg. Frontend, Backend, Mobile, Server. Manage issues/backlogs between Layers'
             emptyStateButton={

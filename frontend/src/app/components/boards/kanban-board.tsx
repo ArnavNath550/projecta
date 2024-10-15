@@ -9,6 +9,8 @@ import EmptyState from "@/app/packages/ui/emptyStates";
 import AnimatedDialog from "@/app/packages/ui/animatedDialog";
 import Button from "@/app/packages/ui/button";
 import CreateTaskDialog from "../dialogs/create-task-dialog";
+import { useParams } from "next/navigation";
+import { getWorkflowByProjectId } from "@/app/api/actions/issue-actions";
 
 
 interface Task {
@@ -25,6 +27,23 @@ export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
 
   const [issueDialogOpen, setIssueDialogOpen] = useState(false);
 
+  const [projectWorkflowData, setProjectWorkflowData] = React.useState([]);
+
+  const params = useParams();
+  
+  const handleFetchProjectWorkflows = async() => {
+    const projectId = params.id;
+    const response = await getWorkflowByProjectId(projectId);
+    // setProjectWorkflowData(response);
+    const data = response.map((workflow) => ({
+      label: workflow.workflowLabel,
+      value: workflow.workflowName, // Adjust value based on your logic
+    }));
+    console.log(`dataa`, data);
+    setProjectWorkflowData(data);
+  }
+
+
   // Fetch issues and taskStatuses when the component mounts
   const fetchIssues = async () => {
     try {
@@ -40,6 +59,7 @@ export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
   };
   useEffect(() => {
     fetchIssues();
+    handleFetchProjectWorkflows();
   }, [projectId]);
 
     const channel = supabase
@@ -108,6 +128,22 @@ export const KanbanBoard: React.FC<{ projectId: number }> = ({ projectId }) => {
                   />
               )     
         })}
+        <div className="flex flex-col gap-2">
+        {projectWorkflowData.map((y) => {
+          if(!taskStatuses.includes(y.value)) {
+            return (
+                <Column
+                  key={y.value}
+                  title={y.value}
+                  column={y.value}
+                  cards={[]}
+                  setCards={setIssues}
+                  reloadIssues={fetchIssues}
+                />
+            )
+          }
+        })}
+        </div>
     </div>
     )}  
     </>

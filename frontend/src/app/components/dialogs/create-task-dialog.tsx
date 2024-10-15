@@ -9,7 +9,7 @@ import { IconCalendar, IconChevronDown, IconChevronRight, IconLineDashed, IconTa
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { generateObjectId, ISSUE_PRIORITY_LIST } from '@/app/helpers';
+import { formatString, generateObjectId, ISSUE_PRIORITY_LIST } from '@/app/helpers';
 import AnimatedDropdown from '@/app/packages/ui/animatedDropdown';
 import TooltipButton from '@/app/packages/ui/animatedTooltip';
 import { useKeyPress } from '../../../../helpers';
@@ -23,6 +23,7 @@ import SetIssueDueDateDialog from './issues/create-issue/set-issue-due-date-dial
 import TagSelectorDialog from './list-content/tag-selector-dialog';
 import CreateTagDialog from './create-tag-dialog';
 import { format, formatDate } from 'date-fns';
+import { getWorkflowByProjectId } from '@/app/api/actions/issue-actions';
 
 type Props = {
   taskStatus: string,
@@ -32,7 +33,8 @@ type Props = {
 
 const CreateTaskDialog = (props: Props) => {
   const { data: session } = useSession();
-  const [priority, setPriority] = React.useState("");
+  const [issueStatus, setIssueStatus] = React.useState(props.taskStatus);
+  const [priority, setPriority] = React.useState("LOW");
   const [issueName, setIssueName] = React.useState("");
   const [issueDescription, setIssueDescription] = React.useState("");
 
@@ -40,7 +42,25 @@ const CreateTaskDialog = (props: Props) => {
   const [selectedDueDate, setSelectedDueDate] = React.useState("");
   const [isIssueTagsOpen, setIsIssueTagsOpen] = React.useState(false);
 
+  const [projectWorkflowData, setProjectWorkflowData] = React.useState([]);
+
   const params = useParams();
+  
+  const handleFetchProjectWorkflows = async() => {
+    const projectId = params.id;
+    const response = await getWorkflowByProjectId(projectId);
+    // setProjectWorkflowData(response);
+    const data = response.map((workflow) => ({
+      label: workflow.workflowLabel,
+      value: workflow.workflowName, // Adjust value based on your logic
+    }));
+    console.log(`dataa`, data);
+    setProjectWorkflowData(data);
+  }
+
+  React.useEffect(() => {
+    handleFetchProjectWorkflows();
+  }, []);
   
   // Formik form handler
   const formik = useFormik({
@@ -53,7 +73,7 @@ const CreateTaskDialog = (props: Props) => {
     validationSchema: Yup.object({
       issueName: Yup.string().required('Issue Name is required'),
       issueDescription: Yup.string(),
-      issuePriority: Yup.string().oneOf(['LOW', 'MEDIUM', 'HIGH', 'URGENT'], 'Invalid priority').required(),
+      issuePriority: Yup.string().oneOf(['LOW', 'MEDIUM', 'HIGH', 'URGENT'], 'Invalid priority'),
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       await createTask(values, setSubmitting, resetForm, props.reloadIssues);
@@ -67,11 +87,10 @@ const CreateTaskDialog = (props: Props) => {
       const response = await axios.post(API_ENDPOINT + '/issues', {
         "issue_name": values.issueName,
         "issue_description": values.issueDescription,
-        "issue_status": props.taskStatus,
+        "issue_status": issueStatus,
         "issue_due_date": selectedDueDate,
         "issue_priority": values.issuePriority,
         "issue_tags": issueSelectedTags,
-        "issue_identifier": "ISSUE-"+issueId,
         "issue_id": issueId,
         "project_creator": session?.user.id,
         "project_id": params.id
@@ -171,7 +190,14 @@ const CreateTaskDialog = (props: Props) => {
           <div className="flex flex-row gap-2 items-center">
             <AnimatedDropdown
               trigger={
-                <Chip size="base" label={priority ? priority : "Priority"} icon={<IconLineDashed size={14}/>}/>
+                <Chip size="base" label={issueStatus ? formatString(issueStatus) : "Status"} icon={<IconLineDashed size={14}/>}/>
+              }
+              dropdownItems={projectWorkflowData}
+              itemAction={(value: string) => setIssueStatus(value)}
+            />
+            <AnimatedDropdown
+              trigger={
+                <Chip size="base" label={priority ? formatString(priority) : "Priority"} icon={<IconLineDashed size={14}/>}/>
               }
               dropdownItems={ISSUE_PRIORITY_LIST}
               itemAction={(value: string) => setPriority(value)}
@@ -198,7 +224,7 @@ const CreateTaskDialog = (props: Props) => {
         </div>
 
         <div className="flex flex-row gap-2 justify-end items-center">
-          <Button intent="secondary" size="s" type="button" onClick={() => props.setCloseIssueDialog}>
+          <Button intent="secondary" size="s" type="button" onClick={() => props.setCloseIssueDialog(true)}>
             Cancel
           </Button>
           <TooltipButton

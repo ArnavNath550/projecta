@@ -34,6 +34,10 @@ const config: Config = {
       'on-surface-darker': '#16171b',
       'error': '#f74747',
       'transparent': 'transparent',
+      'low': '#2A9D8F',
+      'medium': '#F4D35E',
+      'high': '#F4A261',
+      'urgent': '#E63946'
     },
     boxShadow: {
       primary: "rgb(80 63 205 / 50%) 0px 1px 40px",

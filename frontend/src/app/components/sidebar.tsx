@@ -68,12 +68,6 @@ function Sidebar(props: Props) {
                 tabName="Home"
               />
             </Link>
-            <Link href={`/client/${params.id}/tasks`}>
-              <SidebarTab 
-                tabIcon={<IconCapture size={20}  className="text-on-surface" strokeWidth={1} />}
-                tabName="My Issues"
-              />
-            </Link>
         </div>
         {props.projectDataLoading == false  ?(
           <div className="flex flex-col gap-2 animate-fade-up">

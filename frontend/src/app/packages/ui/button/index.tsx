@@ -13,7 +13,7 @@ const buttonStyles = cva(
         unstyled: 'bg-transparent rounded-full hover:bg-surface'
       },
       size: {
-        xs: 'px-1.5 py-1 text-xs',
+        xs: 'px-1 py-1 text-xs',
         s: 'px-2 py-1.5 text-xs',
         base: 'px-3.5 py-1.5 text-[12.5px]',
         l: 'px-5 py-2.5 text-base rounded-full text-sm',

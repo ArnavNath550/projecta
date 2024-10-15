@@ -1,0 +1,50 @@
+
+<svg width="419" height="312" viewBox="0 0 419 312" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="419" height="312" fill="url(#paint0_radial_1_28)"/>
+<g clip-path="url(#clip0_1_28)">
+<rect width="244" height="90" rx="10" transform="matrix(1 0 0.277001 0.930028 59.6422 86.8097)" fill="url(#paint1_radial_1_28)" fill-opacity="0.4"/>
+<rect width="19" height="12" rx="6" transform="matrix(1 0 0.277001 0.930028 89.6473 147.262)" fill="white" fill-opacity="0.1"/>
+<rect width="54" height="12" rx="6" transform="matrix(1 0 0.277001 0.930028 81.6143 120.291)" fill="white" fill-opacity="0.1"/>
+<rect width="54" height="12" rx="6" transform="matrix(1 0 0.277001 0.930028 142.614 120.291)" fill="white" fill-opacity="0.1"/>
+<rect width="168" height="12" rx="6" transform="matrix(1 0 0.277001 0.930028 75.2432 98.9001)" fill="white" fill-opacity="0.1"/>
+</g>
+<rect x="0.638501" y="0.465014" width="243" height="89" rx="9.5" transform="matrix(1 0 0.277001 0.930028 59.5134 86.8423)" stroke="url(#paint2_linear_1_28)"/>
+<rect x="0.638501" y="0.465014" width="243" height="37.5612" rx="9.5" transform="matrix(1 0 0.277001 0.930028 46.8712 37.0325)" fill="url(#paint3_radial_1_28)" fill-opacity="0.4"/>
+<rect x="0.638501" y="0.465014" width="243" height="37.5612" rx="9.5" transform="matrix(1 0 0.277001 0.930028 46.8712 37.0325)" stroke="url(#paint4_linear_1_28)"/>
+<rect width="168" height="12" rx="6" transform="matrix(1 0 0.277001 0.930028 62.9541 48.9543)" fill="white" fill-opacity="0.1"/>
+<g clip-path="url(#clip1_1_28)">
+<rect width="244" height="90" rx="10" transform="matrix(1 0 0.277001 0.930028 82.578 190.414)" fill="#413C47" fill-opacity="0.6"/>
+<rect width="19" height="12" rx="6" transform="matrix(1 0 0.277001 0.930028 112.583 250.866)" fill="#524D5C"/>
+<rect width="54" height="12" rx="6" transform="matrix(1 0 0.277001 0.930028 104.55 223.895)" fill="#524D5C"/>
+<rect width="54" height="12" rx="6" transform="matrix(1 0 0.277001 0.930028 165.55 223.895)" fill="#524D5C"/>
+<rect width="168" height="12" rx="6" transform="matrix(1 0 0.277001 0.930028 98.179 202.504)" fill="#524D5C"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_1_28" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(139.5 187) rotate(128.443) scale(185.77 249.48)">
+<stop stop-color="#15151C"/>
+<stop offset="1" stop-color="#15151C"/>
+</radialGradient>
+<radialGradient id="paint1_radial_1_28" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(193.308 24.5345) rotate(137.446) scale(96.8016 166.399)">
+<stop stop-color="#AD8AF3"/>
+<stop offset="1"/>
+</radialGradient>
+<linearGradient id="paint2_linear_1_28" x1="8.86813e-09" y1="45" x2="263.063" y2="32.5017" gradientUnits="userSpaceOnUse">
+<stop stop-color="#15151C"/>
+<stop offset="1" stop-color="#C2C2C2"/>
+</linearGradient>
+<radialGradient id="paint3_radial_1_28" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(193.308 10.512) rotate(158.528) scale(76.6262 90.0667)">
+<stop stop-color="#AD8AF3"/>
+<stop offset="1"/>
+</radialGradient>
+<linearGradient id="paint4_linear_1_28" x1="8.86813e-09" y1="19.2806" x2="260.454" y2="-9.60045" gradientUnits="userSpaceOnUse">
+<stop stop-color="#15151C"/>
+<stop offset="1" stop-color="#C2C2C2"/>
+</linearGradient>
+<clipPath id="clip0_1_28">
+<rect width="244" height="90" rx="10" transform="matrix(1 0 0.277001 0.930028 59.6422 86.8097)" fill="white"/>
+</clipPath>
+<clipPath id="clip1_1_28">
+<rect width="244" height="90" rx="10" transform="matrix(1 0 0.277001 0.930028 82.578 190.414)" fill="white"/>
+</clipPath>
+</defs>
+</svg>

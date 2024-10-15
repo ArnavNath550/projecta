@@ -14,8 +14,9 @@ export const getPriorityIcon = (priorityType: string) => {
   return priority ? priority.icon : null; // Return the icon if found, otherwise return null
 };
 
-export const formatString = (string: string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+export const formatString = (input: string): string => {
+  if (!input) return ''; // Handle empty string case
+  return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
 }
 
 export const stopPropagation = (e) => {
@@ -23,12 +24,20 @@ export const stopPropagation = (e) => {
   e.nativeEvent.stopImmediatePropagation();
 };
 
+
 export const ISSUE_PRIORITY_LIST = [
-  { icon: <IconAntennaBars2 size={15} />, label: 'Low', value: 'LOW' },
-  { icon: <IconAntennaBars3 size={15} />, label: 'Medium', value: 'MEDIUM' },
-  { icon: <IconAntennaBars4 size={15} />, label: 'High', value: 'HIGH' },
-  { icon: <IconAntennaBars5 size={15} />, label: 'Urgent', value: 'URGENT' }
+  { icon: <div className="w-[8px] h-[8px] rounded-full bg-[#2A9D8F]"></div>, label: 'Low', value: 'LOW' },
+  { icon: <div className="w-[8px] h-[8px] rounded-full bg-[#F4D35E]"></div>, label: 'Medium', value: 'MEDIUM' },
+  { icon: <div className="w-[8px] h-[8px] rounded-full bg-[#F4A261]"></div>, label: 'High', value: 'HIGH' },
+  { icon: <div className="w-[8px] h-[8px] rounded-full bg-[#E63946]"></div>, label: 'Urgent', value: 'URGENT' }
 ];
+
+// export const ISSUE_PRIORITY_LIST = [
+//   { icon: <IconAntennaBars2 size={15} />, label: 'Low', value: 'LOW' },
+//   { icon: <IconAntennaBars3 size={15} />, label: 'Medium', value: 'MEDIUM' },
+//   { icon: <IconAntennaBars4 size={15} />, label: 'High', value: 'HIGH' },
+//   { icon: <IconAntennaBars5 size={15} />, label: 'Urgent', value: 'URGENT' }
+// ];
 
 type Colour = {
   label: string;

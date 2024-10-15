@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { IconCalendar, IconCalendarClock, IconHash, IconPlus, IconTags, IconTimeDuration0 } from "@tabler/icons-react";
+import { IconCalendar, IconCalendarClock, IconCircle, IconHash, IconPlus, IconTags, IconTimeDuration0 } from "@tabler/icons-react";
 import { Chip } from "@/app/packages/ui/chip";
 import AnimatedDialog from "@/app/packages/ui/animatedDialog";
 import Button from "@/app/packages/ui/button";
@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { formatString, getPriorityIcon, ISSUE_PRIORITY_LIST } from "@/app/helpers";
 import AnimatedDropdown from "@/app/packages/ui/animatedDropdown";
-import { updateIssuePriority } from "@/app/api/actions/issue-actions";
+import { getWorkflowByProjectId, handleStatusChange, updateIssuePriority } from "@/app/api/actions/issue-actions";
 import TooltipButton from "@/app/packages/ui/animatedTooltip";
 
 interface Card {
@@ -45,6 +45,7 @@ interface CardProps {
   issue_id: string;
   issue_status: string;
   issue_due_date?: Date;
+  issue_identifier: string,
   column: string;
   handleDragStart: (e: React.DragEvent, issue: any) => void;
 }
@@ -175,7 +176,7 @@ export const Column: React.FC<ColumnProps> = ({
   return (
     <div className="w-[310px] shrink-0">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className={`font-medium text-sm ${headingColor}`}>{title}</h3>
+        <h3 className={`font-medium text-sm ${headingColor}`}>{formatString(title)}</h3>
         <div className="flex flex-row items-center justify-center gap-2">
           <AnimatedDialog
           trigger={
@@ -217,10 +218,12 @@ const Card: React.FC<CardProps> = ({
   issue_status,
   issue_due_date,
   issue_id,
+  issue_identifier,
   column,
   handleDragStart
 }) => {
   const [id, setId] = React.useState(issue_id);
+  const [isNow, setIsNow] = React.useState("");
   const [issueDetailDialogOpen, setIssueDetailDialogOpen] = useState<boolean>(false);
   const [priority, setPriority] = React.useState(issue_priority);
 
@@ -228,9 +231,16 @@ const Card: React.FC<CardProps> = ({
     const createdAtDate = new Date(created_at);
     const now = new Date();
 
-    // Check if created_at is in the same minute as current time
-    if (isSameMinute(createdAtDate, now)) {
-      setId('NOW');
+    // Check if created_at is in the same second as current time
+    if (
+      createdAtDate.getUTCFullYear() === now.getUTCFullYear() &&
+      createdAtDate.getUTCMonth() === now.getUTCMonth() &&
+      createdAtDate.getUTCDate() === now.getUTCDate() &&
+      createdAtDate.getUTCHours() === now.getUTCHours() &&
+      createdAtDate.getUTCMinutes() === now.getUTCMinutes() &&
+      createdAtDate.getUTCSeconds() === now.getUTCSeconds()
+    ) {
+      setIsNow('NOW');
     }
   }, [created_at]);
 
@@ -240,6 +250,25 @@ const Card: React.FC<CardProps> = ({
     const response = updateIssuePriority(issue_id, priority);
     setPriority(priority);
   }
+
+  const [projectWorkflowData, setProjectWorkflowData] = React.useState([]);
+
+  const handleFetchProjectWorkflows = async() => {
+    const projectId = params.id;
+    const response = await getWorkflowByProjectId(projectId);
+    // setProjectWorkflowData(response);
+    const data = response.map((workflow) => ({
+      label: workflow.workflowLabel,
+      value: workflow.workflowName, // Adjust value based on your logic
+    }));
+    console.log(`dataa`, data);
+    setProjectWorkflowData(data);
+  }
+
+  React.useEffect(() => {
+    handleFetchProjectWorkflows();
+  }, []);
+
 
   return (
     <>
@@ -254,16 +283,27 @@ const Card: React.FC<CardProps> = ({
           >
              {/* onClick={() => window.location.href = '/client/'+ params.id + '/issues/' + issue_id} */}
                 <div>
-                <div className={`rounded border border-surface-border bg-surface p-2.5 flex items-start flex-col gap-1 hover:bg-[#23262b] text-left`}>
-              <div className="flex flex-row justify-between w-full">
-              <div className="text-sm text-left">{issue_name}</div>
+                <div className={`rounded bg-[#252532] p-2.5 flex items-start flex-col gap-1 hover:bg-[#20202b] text-left ${isNow == "now" ? "created-now" : ""}`}>
+              <div className="flex flex-row items-center w-full gap-1">
+              <AnimatedDropdown
+                dropdownItems={projectWorkflowData}
+                trigger={<div><IconCircle size={18} color="#fff" /></div>}
+                itemAction={(value: string) => handleStatusChange(id, value)}
+              />
+               <div className="text-sm text-left">{issue_name}</div>
+              </div>
+              <div className="flex flex-row items-center gap-2">
+                <span className="text-xs text-on-surface">
+                  {issue_identifier}
+                </span>
               <AnimatedDropdown
                   trigger={
                     <TooltipButton
-                      buttonContent={<div className="flex-row flex">
+                      buttonContent={<div className="flex-row flex items-center gap-2">
                         <div>
                           {getPriorityIcon(issue_priority)}
                         </div>
+                        <span className="text-xs">{formatString(issue_priority)}</span>
                       </div>}
                       tooltipText={issue_priority}
                       />
@@ -272,21 +312,12 @@ const Card: React.FC<CardProps> = ({
                   itemAction={(value: string) => handlePriorityChange(value)}
                 />
               </div>
-              <div className="flex flex-row gap-2">
+              <div className="flex-row flex gap-1 items-center justify-center">
                 {issue_due_date ? (
-                  <div className="flex flex-row gap-1 items-center text-on-surface text-sm">
-                    <IconCalendarClock size={15} color="#fff"/>
-                    {format(new Date(issue_due_date), 'd MMM')}
-                  </div>
+                  <Chip label={format(new Date(issue_due_date), 'd MMM')} size="s" icon={<IconCalendar size={15} color="#fff"/>} />
                 ) : (
                   <></>
                 )}
-                <Button intent="secondary" size="xs">
-                  <IconHash size={12} color="#fff" />
-                </Button>
-              </div>
-              <div className="flex-row flex gap-1 items-center justify-center">
-                <Chip label="Add Tags" icon={<IconTags size={15} color="#fff" />} size="s"/>
                 {issue_tags.length > 0 ? (
                   <div className="flex flex-row gap-1 items-center">
                     {issue_tags.map((y) => {

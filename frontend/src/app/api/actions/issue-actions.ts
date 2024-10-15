@@ -12,6 +12,17 @@ export const updateIssuePriority = async (issueId: string, issuePriority: string
     }
   };
 
+export const handleStatusChange = async(issueId: string, issueStatus) => {
+  try {
+    const response = await axios.put(API_ENDPOINT + `/issues/${issueId}`, {
+      issue_status: issueStatus,
+    });   
+
+  } catch (error: AxiosError) {
+    console.error('Error updating issue:', error.response ? error.response.data : error.message);
+  }
+}
+
 export interface Tag {
   tag_name: string;
   tag_colour: string;
@@ -33,5 +44,14 @@ export const createIssueTag = async (tag: Tag) => {
     console.log('Tag created successfully:', response.data);
   } catch (error) {
     console.error('Error creating tag:', error);
+  }
+};
+
+export const getWorkflowByProjectId = async (projectId: string) => {
+  try {
+    const response = await axios.get(`${API_ENDPOINT}/workflows/${projectId}`);
+    return response.data.workflow_data;
+  } catch (error: AxiosError) {
+    console.error('Error fetching workflow:', error.response ? error.response.data : error.message);
   }
 };
