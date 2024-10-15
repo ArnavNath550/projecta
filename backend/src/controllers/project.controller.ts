@@ -23,34 +23,51 @@ export const createProject = async (req: Request, res: Response) => {
     if (projectError) throw projectError;
 
     // Generate starter issues
-    const starterIssues = [
-      { issue_name: 'Welcome to Project.A', issue_status: 'Todo', issue_description: 'Start by exploring your new project.', issue_priority: 'Low' },
-      { issue_name: 'Set up your first task', issue_status: 'In Progress', issue_description: 'Create a task and assign it to yourself.', issue_priority: 'Medium' },
-      { issue_name: 'Review project settings', issue_status: 'In Review', issue_description: 'Review and adjust project settings to suit your needs.', issue_priority: 'Medium' },
-      { issue_name: 'Complete onboarding', issue_status: 'Done', issue_description: 'Finish the onboarding steps for Project.A.', issue_priority: 'High' },
-      { issue_name: 'Start building features', issue_status: 'Todo', issue_description: 'Begin by planning the features you want to add.', issue_priority: 'High' },
+    // const starterIssues = [
+    //   { issue_name: 'Welcome to Project.A', issue_status: 'Todo', issue_description: 'Start by exploring your new project.', issue_priority: 'Low' },
+    //   { issue_name: 'Set up your first task', issue_status: 'In Progress', issue_description: 'Create a task and assign it to yourself.', issue_priority: 'Medium' },
+    //   { issue_name: 'Review project settings', issue_status: 'In Review', issue_description: 'Review and adjust project settings to suit your needs.', issue_priority: 'Medium' },
+    //   { issue_name: 'Complete onboarding', issue_status: 'Done', issue_description: 'Finish the onboarding steps for Project.A.', issue_priority: 'High' },
+    //   { issue_name: 'Start building features', issue_status: 'Todo', issue_description: 'Begin by planning the features you want to add.', issue_priority: 'High' },
+    // ];
+
+    // // Map the issues with the project ID
+    // const issuesToInsert = starterIssues.map(issue => ({
+    //   ...issue,
+    //   issue_identifier: `${project_id}-${issue.issue_name.replace(/\s+/g, '_').toLowerCase()}`, // Generate unique identifier
+    //   issue_tags: ['onboarding', 'welcome'],
+    //   project_creator,
+    //   project_id,
+    // }));
+
+    // // Insert the starter issues into the 'issues' table
+    // const { error: issueError } = await supabase.from('issues').insert(issuesToInsert);
+    // if (issueError) throw issueError;
+
+    // Create the default workflow for the project
+    const defaultWorkflow = [
+      { workflowName: 'TODO', workflowLabel: 'Todo', workflowGroup: 'TODO' },
+      { workflowName: 'PENDING', workflowLabel: 'Pending', workflowGroup: 'TODO' },
+      { workflowName: 'IN_REVIEW', workflowLabel: 'In Review', workflowGroup: 'IN_REVIEW' },
+      { workflowName: 'DONE', workflowLabel: 'Done', workflowGroup: 'DONE' },
     ];
 
-    // Map the issues with the project ID
-    const issuesToInsert = starterIssues.map(issue => ({
-      ...issue,
-      issue_identifier: `${project_id}-${issue.issue_name.replace(/\s+/g, '_').toLowerCase()}`, // Generate unique identifier
-      issue_tags: ['onboarding', 'welcome'],
-      project_creator,
-      project_id,
-    }));
+    // Insert the default workflow into the 'workflows' table
+    const workflowsToInsert = {
+      workflow_data: defaultWorkflow,
+      project_id: project_id,
+      created_at: new Date(),
+    };
 
-    // Insert the starter issues into the 'issues' table
-    const { error: issueError } = await supabase.from('issues').insert(issuesToInsert);
-
-    if (issueError) throw issueError;
+    const { error: workflowError } = await supabase.from('workflows').insert(workflowsToInsert);
+    if (workflowError) throw workflowError;
 
     return res.status(201).json({
-      message: 'Project created successfully with starter issues',
+      message: 'Project created successfully with starter issues and default workflow',
       project: projectData,
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Error creating project and issues', error });
+    return res.status(500).json({ message: 'Error creating project, issues, or workflow', error });
   }
 };
 

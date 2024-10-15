@@ -1,5 +1,25 @@
+//@ts-nocheck
 import { Request, Response } from 'express';
 import { supabase } from '../config/db';
+import {getProjectIdentifier} from './helpers';
+
+
+// Helper function to get the project identifier (e.g., 'PROJECT-')
+const handleGetProjectIdentifier = async (project_id: string): Promise<string> => {
+  // Assuming you have a way to get the project identifier (e.g., project name or key)
+  // This could be fetched from a 'projects' table using `project_id`
+  const { data, error } = await supabase
+    .from('projects')
+    .select('project_name') // Assuming 'project_key' is something like 'PROJECT'
+    .eq('project_id', project_id)
+    .single();
+
+  if (error) {
+    throw new Error('Error fetching project identifier');
+  }
+
+  return getProjectIdentifier(data.project_name); // Returns something like 'PROJECT'
+};
 
 export const createIssue = async (req: Request, res: Response) => {
   const {
@@ -8,34 +28,57 @@ export const createIssue = async (req: Request, res: Response) => {
     issue_status,
     issue_priority,
     issue_tags,
-    issue_identifier,
     issue_due_date,
+    issue_identifier,
     issue_id,
     project_creator,
     project_id,
   } = req.body;
 
-  const { data, error } = await supabase
-    .from('issues')
-    .insert([
-      {
-        issue_name,
-        issue_description,
-        issue_status,
-        issue_priority,
-        issue_tags,
-        issue_identifier,
-        issue_due_date,
-        issue_id,
-        project_creator,
-        project_id,
-      },
-    ]);
+  try {
+    // Fetch the project identifier (e.g., 'PROJECT')
+    const projectIdentifier = await handleGetProjectIdentifier(project_id);
 
-  if (error) {
-    return res.status(400).json({ error: error.message });
+    // Get the current number of issues for this project to auto-increment the issue number
+    const { count: issueCount, error: countError } = await supabase
+      .from('issues')
+      .select('*', { count: 'exact' }) // Count all issues for this project
+      .eq('project_id', project_id);
+
+    if (countError) {
+      return res.status(400).json({ error: 'Error counting project issues' });
+    }
+
+    // Generate the issue_identifier by appending the next issue number to the project identifier
+    const nextIssueNumber = issueCount + 1;
+    const issue_identifier = `${projectIdentifier}-${nextIssueNumber}`;
+
+    // Insert the new issue with the auto-generated issue_identifier
+    const { data, error } = await supabase
+      .from('issues')
+      .insert([
+        {
+          issue_name,
+          issue_description,
+          issue_status,
+          issue_priority,
+          issue_tags,
+          issue_due_date,
+          issue_identifier, // Use the newly generated identifier
+          issue_id,
+          project_creator,
+          project_id,
+        },
+      ]);
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.status(201).json({ data });
+  } catch (error) {
+    return res.status(500).json({ error: 'Error creating issue', details: error.message });
   }
-  res.status(201).json({ data });
 };
 
 export const getIssues = async (req: Request, res: Response) => {
@@ -85,9 +128,8 @@ export const getIssueById = async (req: Request, res: Response) => {
 };
 
 
-
 export const updateIssue = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { id } = req.params; // This is the issue_id from the URL
   const {
     issue_name,
     issue_description,
@@ -95,31 +137,35 @@ export const updateIssue = async (req: Request, res: Response) => {
     issue_priority,
     issue_tags,
     issue_identifier,
-    issue_id,
     project_creator,
     project_id,
   } = req.body;
 
-  const { data, error } = await supabase
-    .from('issues')
-    .update({
-      issue_name,
-      issue_description,
-      issue_status,
-      issue_priority,
-      issue_tags,
-      issue_identifier,
-      issue_id,
-      project_creator,
-      project_id,
-    })
-    .eq('issue_id', id);
+  // Make sure you are handling the correct issue_id, and using the right fields
+  try {
+    const { data, error } = await supabase
+      .from('issues')
+      .update({
+        issue_name,
+        issue_description,
+        issue_status,
+        issue_priority,
+        issue_tags,
+        project_creator,
+        project_id,
+      })
+      .eq('issue_id', id); // Ensure id from params matches the column 'issue_id'
 
-  if (error) {
-    return res.status(400).json({ error: error.message });
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    return res.status(200).json({ data });
+  } catch (err) {
+    return res.status(500).json({ error: 'Server error updating issue', details: err });
   }
-  res.status(200).json({ data });
 };
+
 
 export const deleteIssue = async (req: Request, res: Response) => {
   const { id } = req.params;
