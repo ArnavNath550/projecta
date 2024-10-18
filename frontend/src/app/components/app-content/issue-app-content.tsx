@@ -1,6 +1,6 @@
 import { API_ENDPOINT } from '@/app/services/api';
 import React from 'react'
-import { KanbanBoard } from '../boards/kanban-board';
+import {KanbanBoard} from '../boards/kanban-board-v2';
 import { useParams } from 'next/navigation';
 import Workflows from '../issues/workflows';
 import EmptyState from '@/app/packages/ui/emptyStates';
@@ -13,11 +13,10 @@ function IssueAppContent() {
   const id = params.id;
 
   return (
-    <div>
+    <div className="App">
       <KanbanBoard projectId={id} />
-      {/* <Workflows /> */}
     </div>
-  )
+  );
 }
 
 export default IssueAppContent

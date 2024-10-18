@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 import TasksPage from '../client/[id]/issues/page';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import ProductUpcomingDialog from './dialogs/product-upcoming-dialog';
 
 type Props = {
   sidebarProjectItems: [],
@@ -25,6 +26,7 @@ function Sidebar(props: Props) {
   const { data: session } = useSession();
 
   const [switcherModalOpen, setSwitcherModalOpen] = React.useState(false);
+  const [comingSoonModalOpen, setComingSoonModalOpen] = React.useState(false);
 
   const params = useParams<{ id: number; }>()
 
@@ -113,12 +115,15 @@ function Sidebar(props: Props) {
                 tabName="Layers"
               />
             </Link>
-            <Link href={`/client/${params.id}/layers`}>
-              <SidebarTab 
+            <AnimatedDialog 
+              trigger={<SidebarTab 
                 tabIcon={<IconGripHorizontal size={20}  className="text-on-surface" strokeWidth={1} />}
                 tabName="Roadmaps"
-              />
-            </Link>
+              />}
+              content={<ProductUpcomingDialog productFeature="Roadmap" />}
+              isOpen={comingSoonModalOpen}
+              setIsOpen={setComingSoonModalOpen}
+            />
             <Link href={`/client/${params.id}/settings`}>
               <SidebarTab 
                 tabIcon={<IconSettings size={20}  className="text-on-surface" strokeWidth={1} />}
